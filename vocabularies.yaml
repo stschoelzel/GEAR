@@ -1,0 +1,126 @@
+# Controlled values. Keys are the values used in files; the entries are labels per language.
+# Adding a language: add it to `lang` and add labels below. Missing labels fall back to en, then de.
+# Tags are not listed here: every file in tags/ is a tag.
+
+schema_version: "0.7"
+
+lang:
+  en: {en: English, de: Englisch}
+  de: {en: German, de: Deutsch}
+
+type:
+  game:    {en: game, de: Spiel}
+  sequence: {en: sequence, de: Sequenz}
+  event:   {en: event, de: Ereignis}
+  tag:     {en: tag, de: Schlagwort}
+
+status:
+  draft:    {en: draft, de: Entwurf}
+  reviewed: {en: reviewed, de: geprüft}
+  citable:  {en: citable, de: zitierfähig}
+
+# Kind of place in the game that a sequence is (DiGAP item 20, unitizing).
+unit:
+  quest:    {en: quest, de: Quest}
+  mission:  {en: mission, de: Mission}
+  chapter:  {en: chapter, de: Kapitel}
+  level:    {en: level, de: Level}
+  cutscene: {en: cutscene, de: Zwischensequenz}
+  scene:    {en: scene, de: Szene}
+  menu:     {en: menu or interface, de: Menü oder Oberfläche}
+  other:    {en: other, de: anderes}
+
+layer:
+  fixed:       {en: fixed, de: fest}                 # laid down, the same in every playthrough
+  conditional: {en: conditional, de: bedingt}        # laid down, but appears only after certain choices or states
+  contingent:  {en: contingent, de: kontingent}      # arises in this playthrough
+
+# How the player is involved in what the event shows.
+# For optional and forced, `act` and `consequence` say more.
+agency:
+  reference: {en: reference, de: Erwähnung}           # only mentioned, in text or dialogue
+  watching:  {en: watching, de: zuschauen}            # shown, the player does not act
+  optional:  {en: optional, de: optional}             # the player can carry it out, but need not
+  forced:    {en: forced, de: erzwungen}              # the player must carry it out to go on
+
+# Only with agency optional or forced: does the player only decide, or carry the act out?
+act:
+  trigger: {en: triggers, de: löst aus}        # a decision or button press; the game carries the act out
+  perform: {en: performs, de: führt aus}       # the player carries the act out through play
+
+# Only with agency optional or forced: what follows if the player acts (if_done) or does not (if_not_done).
+consequence:
+  none:     {en: no effect, de: keine Folge}
+  progress: {en: progress, de: Fortschritt}
+  reward:   {en: reward, de: Belohnung}
+  penalty:  {en: penalty, de: Nachteil}
+  branch:   {en: changes later content, de: verändert spätere Inhalte}
+  blocks:   {en: cannot go on, de: kein Weiterkommen}
+  fail:     {en: failure, de: Scheitern}
+  unknown:  {en: not yet known, de: noch unbekannt}
+
+# Depth of play for a game (field engagement in game.md), after Aarseth (2003), "Playing Research". DiGAP items 17 and 18.
+engagement:
+  superficial_play:   {en: superficial play, de: oberflächliches Spielen}
+  light_play:         {en: light play, de: leichtes Spielen}
+  partial_completion: {en: partial completion, de: teilweise abgeschlossen}
+  total_completion:   {en: total completion, de: vollständig abgeschlossen}
+  repeated_play:      {en: repeated play, de: wiederholtes Spielen}
+  expert_play:        {en: expert play, de: Expertenspiel}
+
+# External vocabularies a tag can be mapped to (field `mappings` in tags/). Not copied, only referenced.
+mapping_scheme:
+  wikidata:  {en: Wikidata, de: Wikidata}
+  vgms:      {en: UW/SIMM Video Game Metadata Schema, de: UW/SIMM Video Game Metadata Schema}   # CC BY-NC-SA, reference only
+  gop:       {en: Game Ontology Project, de: Game Ontology Project}
+  gdp:       {en: Gameplay Design Patterns, de: Gameplay Design Patterns}
+  ddd:       {en: "Does the Dog Die?", de: "Does the Dog Die?"}
+
+# Kind of match, as in SKOS.
+mapping_match:
+  exact:   {en: exact match, de: genaue Entsprechung}
+  close:   {en: close match, de: nahe Entsprechung}
+  broader: {en: broader, de: weiter}
+  narrower: {en: narrower, de: enger}
+  related: {en: related, de: verwandt}
+
+# How a work of literature relates to a game, sequence, event or tag (Zotero tag gear:<target>:<role>).
+literature_role:
+  analysis:   {en: analysis, de: Analyse}
+  coverage:   {en: coverage, de: Berichterstattung}
+  collection: {en: collection on the title, de: Sammelband zum Titel}
+  method:     {en: method, de: Methode}
+  theory:     {en: theory, de: Theorie}
+  context:    {en: context, de: Kontext}
+  source:     {en: primary source, de: Primärquelle}
+
+# Groups for content_warnings.
+content_warning_group:
+  violence:        {en: violence and war, de: Gewalt und Krieg}
+  fear:            {en: fear and horror, de: Angst und Horror}
+  burdensome:      {en: burdensome themes, de: belastende Themen}
+  sexuality:       {en: sexuality, de: Sexualität}
+  language:        {en: language, de: Sprache}
+  substances:      {en: addictive substances, de: Suchtmittel}
+  gambling:        {en: gambling and monetisation, de: Glücksspiel und Monetarisierung}
+  discrimination:  {en: discrimination, de: Diskriminierung}
+
+# Values used in content_warnings. Each belongs to one group. How the player is involved is coded in `agency`.
+content_warnings:
+  torture:         {group: violence, en: torture, de: Folter}
+  killing:         {group: violence, en: killing, de: Tötung}
+  violence:        {group: violence, en: other violence, de: sonstige Gewalt}
+  war:             {group: violence, en: war, de: Krieg}
+  body_horror:     {group: fear, en: body horror, de: Körperhorror}
+  jump_scare:      {group: fear, en: jump scare, de: Schreckmoment}
+  suicide:         {group: burdensome, en: suicide, de: Suizid}
+  self_harm:       {group: burdensome, en: self-harm, de: Selbstverletzung}
+  sexual_violence: {group: sexuality, en: sexual violence, de: sexualisierte Gewalt}
+  sexual_content:  {group: sexuality, en: sexual content, de: sexuelle Inhalte}
+  slurs:           {group: language, en: slurs, de: Beleidigungen}
+  drugs:           {group: substances, en: drugs, de: Drogen}
+  alcohol:         {group: substances, en: alcohol, de: Alkohol}
+  gambling:        {group: gambling, en: gambling, de: Glücksspiel}
+  loot_boxes:      {group: gambling, en: loot boxes, de: Lootboxen}
+  racism:          {group: discrimination, en: racism, de: Rassismus}
+  sexism:          {group: discrimination, en: sexism, de: Sexismus}

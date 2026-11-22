@@ -1,0 +1,99 @@
+# Datasette settings for browsing GEAR locally.
+#   python scripts/export.py
+#   datasette build/gear.db -m datasette.yaml
+title: GEAR
+description: Game Evidence Archive & Repository. Search, filter and browse the evidence.
+license: CC BY 4.0
+license_url: https://creativecommons.org/licenses/by/4.0/
+source: GEAR
+databases:
+  gear:
+    tables:
+      events:
+        description: One row per event. Filter with the facets, search with the box.
+        sort: id
+        facets:
+          - game
+          - sequence_title
+          - layer
+          - agency
+          - act
+          - if_done
+          - if_not_done
+          - status
+          - version
+          - language
+          - array: tags
+          - array: content_warnings
+      games:
+        facets: [engagement]
+      sequences:
+        facets: [game, unit, status]
+      tags:
+        description: Terms with definition and aspects.
+      literature_links:
+        description: Literature connected to GEAR through Zotero tags gear:<target>:<role>.
+        facets: [target_type, role, target]
+      labels:
+        description: Coded values with English and German labels.
+        facets: [field]
+    queries:
+      search:
+        title: Search everything
+        description: Full-text search across events, tags, translations and literature.
+        sql: |-
+          select 'event' as type, e.id as id, e.title, e.game, snippet(events_fts, -1, '[', ']', ' … ', 12) as hit, e.path
+            from events_fts join events e on e.rowid = events_fts.rowid where events_fts match :q
+          union all
+          select 'sequence', q.id, q.title, q.game, snippet(sequences_fts, -1, '[', ']', ' … ', 12), q.path
+            from sequences_fts join sequences q on q.rowid = sequences_fts.rowid where sequences_fts match :q
+          union all
+          select 'tag', t.tag, t.title, '', snippet(tags_fts, -1, '[', ']', ' … ', 12), t.path
+            from tags_fts join tags t on t.rowid = tags_fts.rowid where tags_fts match :q
+          union all
+          select 'translation (' || tr.lang || ')', tr.of_path, tr.title, '', snippet(translations_fts, -1, '[', ']', ' … ', 12), tr.path
+            from translations_fts join translations tr on tr.rowid = translations_fts.rowid where translations_fts match :q
+          union all
+          select 'literature', l.citekey, l.title, '', l.author, ''
+            from literature_fts join literature l on l.rowid = literature_fts.rowid where literature_fts match :q
+      events_by_tag:
+        title: Events by tag
+        description: All events with a tag, across games, with literature on the tag.
+        sql: |-
+          select e.id, e.game_title as game, e.title, e.layer, e.agency, e.status, e.path
+            from event_tags et join events e on e.id = et.event
+           where et.tag = :tag
+           order by e.game, e.id
+      tag_by_game:
+        title: Tags by game
+        description: How many events carry which tag in which game.
+        sql: |-
+          select et.tag, e.game_title as game, count(*) as events
+            from event_tags et join events e on e.id = et.event
+           group by et.tag, e.game
+           order by et.tag, events desc
+      game_overview:
+        title: Game overview
+        description: Events of one game, in order, with the conditions of observation.
+        sql: |-
+          select e.sequence_title as sequence, e.id, e.title, e.observed_date, e.version, e.layer, e.agency, e.tags, e.path
+            from events e
+           where e.game = :game
+           order by e.sequence, e.id
+      literature_for:
+        title: Literature for a tag, game or event
+        description: "Enter a tag name, a game folder name, a sequence ID or an event ID."
+        sql: |-
+          select ll.role, l.citekey, l.author, l.year, l.title, l.doi, l.url
+            from literature_links ll join literature l on l.citekey = ll.citekey
+           where ll.target = :target
+           order by l.year
+      content_warnings_overview:
+        title: Content warnings by group
+        description: Events per content warning, grouped as in vocabularies.yaml.
+        sql: |-
+          select lab."group" as cw_group, ecw.content_warning, lab.de as label_de, count(*) as events
+            from event_content_warnings ecw
+            left join labels lab on lab.field = 'content_warnings' and lab.value = ecw.content_warning
+           group by ecw.content_warning
+           order by cw_group, events desc

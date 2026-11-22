@@ -1,0 +1,38 @@
+# Checks every push and pull request with scripts/validate.py.
+# After a successful push to main, it asks the website repository to rebuild
+# gear.madsomeness.de. That step needs the secret SITE_DISPATCH_TOKEN and is
+# skipped without it, for example in forks.
+
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - run: python scripts/validate.py
+
+  rebuild-site:
+    needs: validate
+    if: github.event_name == 'push' && github.repository == 'stschoelzel/GEAR'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask madsomeness-gear to rebuild
+        env:
+          TOKEN: ${{ secrets.SITE_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "SITE_DISPATCH_TOKEN not set, skipping"; exit 0; fi
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/stschoelzel/madsomeness-gear/dispatches \
+            -d '{"event_type":"gear-updated"}'

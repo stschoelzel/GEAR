@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite a specific state of this dataset (commit or release)."
+type: dataset
+title: "GEAR - Game Evidence Archive & Repository"
+authors:
+  - family-names: Schölzel
+    given-names: Stephan
+license: CC-BY-4.0
+version: "0.7"
