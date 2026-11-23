@@ -18,6 +18,19 @@ The aim is an observation that another person can check against the material and
 8. **Quote briefly and exactly.** In the language of the client, with locator or timecode. A translation may follow in brackets.
 9. **Count and time where possible.** "Three uses", "after about 40 seconds".
 10. **State uncertainty.** "Not checked whether", "unclear in the recording".
+11. **Rules and dynamics are observed; effects are interpreted.** What the game sets and what happens in play belongs here. What it does to the player or reader does not; it belongs in Interpretation.
+
+## Sentence patterns
+
+Sentences follow one of these patterns, taken from EARS and Gherkin. The wording may vary; the structure is what counts.
+
+| Pattern | Use | Example |
+|---|---|---|
+| The [actor] [action] [object]. | an action by the player or a character | The player uses the Neural Needler on the prisoner. |
+| After [event], [result]. | a response triggered by an event | After each use, a line of text appears. |
+| While [state], [result]. | a state that holds for a time | While the objective is open, the needler stays in the inventory. |
+| [Element] shows [content]. | what is displayed | A heart monitor shows Mr. K's heart rate. |
+| Given [state], when [action], then [result]. | a check: whether another person can reproduce it | Given the objective is complete, when the player uses the needler, then the prisoner answers with a further line. |
 
 ## Example
 

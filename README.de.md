@@ -12,6 +12,18 @@ Maßgeblich ist die [englische Fassung](README.md). Feldnamen und Werte sind eng
 
 Die Beispiele vergleichen Folter in zwei Spielen: die Quest "The Art of Persuasion" in World of Warcraft: Wrath of the Lich King und die Mission "By the Book" in Grand Theft Auto V. Jede ist ein Befund. Beide sind Entwürfe aus Referenzquellen und müssen noch im Spiel geprüft werden.
 
+## Grundsätze
+
+GEAR beruht auf fünf Grundsätzen. DiGAP ist der Rahmen, auf dem sie aufbauen, Zotero ist das Werkzeug für die Literatur.
+
+1. **Roh und bearbeitet getrennt** (OAIS). Eine Quelle bleibt so, wie sie gefunden wurde. Eine Beobachtung ist ein bearbeiteter Datensatz dazu und wird als solcher geschrieben. Eine aus einem Walkthrough zitierte Stelle ist Rohmaterial und trägt ihre Fundstelle.
+2. **Jede Beschreibung hat eine Herkunft** (OLAC). Jedes Event nennt seine `source`: die Referenz oder den Walkthrough, mit URL und Abrufdatum, wo es eine gibt, oder `own play` für gespieltes Material.
+3. **Fundstellen sind präzise** (Media Fragments). Eine Fundstelle zeigt auf die genaue Stelle: ein Timecode für gespieltes Video, ein Media-Fragments-Fragment `#t=` für Web-Video, der benannte Abschnitt oder die benannte Passage bei Text.
+4. **Beschreibungen sind wertneutral und eindeutig** (ASD-STE100, mit den Satzmustern von EARS und Gherkin). Ein Begriff hat eine Bedeutung. Beobachtungen folgen dem [Leitfaden für Beobachtungen](schema/observation_style.de.md). Wertung und Deutung stehen nur in der Interpretation.
+5. **Regeln, Dynamik und Wirkung getrennt** (MDA). Regeln und Dynamik werden beobachtet; Wirkungen werden interpretiert. Siehe [Was wohin gehört](#was-wohin-gehört).
+
+DiGAP wird unter [Methode](#methode-digap) beschrieben. Literatur wird in Zotero gepflegt; siehe [Literatur](#literatur).
+
 ## Drei Zugänge
 
 ```
@@ -72,8 +84,8 @@ observed:                      # Beobachtungsbedingungen, für jedes Event
   by: Stephan Schölzel
 events:
   1:
-    source: "wowclassicdb.com/wotlk/quest/11648"   # wenn gelesen statt gespielt
-    locator: "quest description"                    # oder timecode, wenn gespielt
+    source: "wowclassicdb.com/wotlk/quest/11648"   # Pflicht; gespielt: "own play"
+    locator: "quest offer text"                     # gespielt: timecode; gelesen: die genaue Stelle
     layer: fixed
     agency: optional
   3:
@@ -103,6 +115,8 @@ Deutungen und Notizen gehören in den Befund oder in den Tag. Die Deutung eines 
 
 **Metadaten** beschreiben den Beleg, nicht das Spiel. Wohin eine Datei gehört, ergibt sich aus dem Ordner und steht nicht noch einmal da.
 
+**Quelle und Fundstelle** stammen aus dem Rohmaterial und bleiben getrennt vom bearbeiteten Text (OAIS). `source` ist für jedes Event Pflicht: bei gelesenem Material die Referenz, mit URL und Abrufdatum, wo es eine gibt; bei gespieltem Material `own play`. Eine `locator` nennt die genaue Stelle: einen Timecode (`HH:MM:SS`) für gespieltes Video, ein Media-Fragments-Fragment `#t=` für Web-Video, bei Text den Abschnitt oder die Passage.
+
 **Kodierung** nutzt nur kontrollierte Werte. `tags` muss eine Datei in `tags/` nennen; alle anderen Werte stehen in `vocabularies.yaml`. Freie Tags gibt es nicht, weil sie auseinanderlaufen (`torture`, `folter`, `torture_scene`).
 
 **Beschreibung** kennzeichnet die Stelle im Spiel: Teil oder Erweiterung, Quest oder Mission, spielinterne IDs, Namen. Sie folgt der Referenzquelle des Spiels und steht in Abschnitt 0; die Beschreibung eines Events nennt nur den Moment darin.
@@ -110,6 +124,8 @@ Deutungen und Notizen gehören in den Befund oder in den Tag. Die Deutung eines 
 **Beobachtung** hält fest, was wahrnehmbar ist, mit Timecode (gespielt) oder Fundstelle (gelesen). Keine Wertung, keine Absicht unterstellen. Kurze Zitate sind erlaubt. Die Regeln stehen im [Leitfaden für Beobachtungen](schema/observation_style.de.md).
 
 **Interpretation** ist die Deutung dieses einen Events, in Abschnitt 0 die der ganzen Sequenz. Deutungen über mehrere Befunde gehören in einen Tag.
+
+**Regeln, Dynamik und Wirkung** (MDA) entsprechen diesen Schichten. Die Regeln des Spiels und was im Spiel geschieht, werden beobachtet; sie gehören in Description und Observation und sind mit `layer` und `agency` kodiert. Was das bei Spielerin oder Lesenden bewirkt, ist eine Deutung und gehört in die Interpretation. Das Feld `consequence` ist beobachtet: was das Spiel danach tut.
 
 ## Kodierung
 
@@ -185,7 +201,7 @@ Spiel- und Tag-Seiten führen ihre Befunde und Literatur nicht von Hand auf; Skr
 1. **Recherche.** Klären, was es zum Spiel gibt und wo die Stelle liegt (siehe unten).
 2. **Spiel anlegen.** Wenn es neu ist: `games/<spiel>/game.md` mit Referenzquelle und Abgrenzung.
 3. **Befund anlegen.** `templates/evidence.md` in den Ordner des Spiels kopieren, benannt nach Quest oder Mission. Abschnitt 0 aus der Referenzquelle füllen oder löschen, wenn es keine Sequenz gibt.
-4. **Events schreiben.** Je Moment ein nummerierter Abschnitt: Beschreibung, Beobachtung, Interpretation, getrennt. Jedes Event unter `events` mit `layer` und `agency` kodieren; `tags` für den Befund setzen.
+4. **Events schreiben.** Je Moment ein nummerierter Abschnitt: Beschreibung, Beobachtung, Interpretation, getrennt. Jedes Event unter `events` mit `layer` und `agency` kodieren, dazu eine `source` und eine genaue `locator` angeben; `tags` für den Befund setzen.
 5. **Tags ergänzen.** Ein neues Thema bekommt eine Datei in `tags/`, ein neuer Aspekt einen Abschnitt im Tag.
 6. **Literatur ergänzen** in Zotero, mit `gear:`-Tags.
 7. **Prüfen und committen.** `python scripts/validate.py`, dann Status setzen.

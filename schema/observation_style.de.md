@@ -18,6 +18,19 @@ Ziel ist eine Beobachtung, die eine andere Person am Material prüfen kann und d
 8. **Kurz und genau zitieren.** In der Sprache des Clients, mit Fundstelle oder Timecode. Eine Übersetzung kann in Klammern folgen.
 9. **Zählen und Zeiten angeben, wo möglich.** "Drei Anwendungen", "nach etwa 40 Sekunden".
 10. **Unsicherheit benennen.** "Nicht geprüft, ob", "in der Aufnahme unklar".
+11. **Regeln und Dynamik werden beobachtet; Wirkungen werden interpretiert.** Was das Spiel festlegt und was im Spiel geschieht, gehört hierher. Was es bei Spielerin oder Lesenden bewirkt, gehört nicht hierher, sondern in die Interpretation.
+
+## Satzmuster
+
+Sätze folgen einem dieser Muster, übernommen aus EARS und Gherkin. Der Wortlaut darf variieren; zählt ist der Aufbau.
+
+| Muster | Verwendung | Beispiel |
+|---|---|---|
+| Die [Akteur:in] [Handlung] [Objekt]. | Handlung der Spieler:in oder einer Figur | Die Spieler:in benutzt den Neural Needler am Gefangenen. |
+| Nach [Ereignis] [Ergebnis]. | Reaktion, ausgelöst durch ein Ereignis | Nach jeder Anwendung erscheint eine Textzeile. |
+| Solange [Zustand], [Ergebnis]. | Zustand, der eine Zeit lang gilt | Solange das Ziel offen ist, bleibt der Needler im Inventar. |
+| [Element] zeigt [Inhalt]. | was angezeigt wird | Ein Herzfrequenzmonitor zeigt die Herzfrequenz von Mr. K. |
+| Wenn [Zustand] und [Handlung], dann [Ergebnis]. | Prüfung, ob eine andere Person es nachvollziehen kann | Wenn das Ziel erfüllt ist und die Spieler:in den Needler benutzt, antwortet der Gefangene mit einer weiteren Zeile. |
 
 ## Beispiel
 

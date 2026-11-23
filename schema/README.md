@@ -40,9 +40,9 @@ All originals need `type`, `schema_version` (a string, `"0.8"`), `status` and `t
 | Field | |
 |---|---|
 | `layer` | required |
-| `timecode` or `locator` | one of them required |
+| `timecode` or `locator` | one of them required; timecode as `HH:MM:SS` (played), locator names the exact place (read) |
 | `agency`, `act`, `consequence` | coding, see below |
-| `source` | if read, not played: database, walkthrough, video |
+| `source` | required; read: reference as a Markdown link with access date, `[Title](URL), accessed YYYY-MM-DD`, several separated by `;`; without URL the reference alone; played: `own play` |
 | `observed` | overrides single fields of the entry's `observed` for this event |
 | `media`, `coded_by` | optional |
 

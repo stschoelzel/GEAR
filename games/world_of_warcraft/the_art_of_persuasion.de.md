@@ -16,8 +16,10 @@ Questtext, den Librarian Normantis beim Anbieten der Quest zeigt.
 
 ### Beobachtung
 
-Normantis sagt, der Verhaltenskodex der Kirin Tor missbillige "extreme" Maßnahmen. Die Spieler:in sei als Außenstehende an diese Einschränkungen nicht gebunden und dürfe alles Nötige tun. Danach erhält sie den Neural Needler.
+Im Questtext sagt Normantis, der Verhaltenskodex der Kirin Tor missbillige "extreme" Maßnahmen. Die Spieler:in sei als Außenstehende an diese Einschränkungen nicht gebunden und dürfe alles Nötige tun. Das Ziel ist, den Neural Needler am Imprisoned Beryl Sorcerer anzuwenden, bis er verrät, wo Lady Evanor festgehalten wird.
 
 ### Interpretation
 
-Die Institution behält ihre Regeln und lässt die Tat von jemandem ausführen, für den sie nicht gelten. Das Spiel macht die Spieler:in damit ausdrücklich zur Ausführenden einer Folter, die die Auftraggebenden für sich selbst ablehnen. Siehe [outsourced torture](../../tags/torture.md#outsourced-torture).
+Die Institution behält ihre Regeln und lässt die Tat von jemandem ausführen, für den sie nicht gelten. Siehe [outsourced torture](../../tags/torture.md#outsourced-torture).
+
+Open: Gibt es einen Weg um die Quest herum, und läuft die Kette ohne sie weiter?

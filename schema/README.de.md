@@ -33,7 +33,7 @@ Alle Originale brauchen `type`, `schema_version` (als String, `"0.8"`), `status`
 | evidence | `id`, `observed` mit `date`, `version`, `platform`, `language`, `by`; `events` | `unit` (Pflicht mit Abschnitt 0), `tags`, `first_appeared` mit `version`, optional `branch` (nur wenn das Spiel `branches` hat) und `note`, `variant_of` (Befund-ID); in `observed`: `branch` (Pflicht, wenn das Spiel `branches` hat), in `observed`: `server`, `season`, `difficulty`, `mode` |
 | tag | | `related`, `mappings` |
 
-`events` ordnet jeder Event-Nummer ihre Felder zu: `layer` (Pflicht), `timecode` oder `locator` (eins davon Pflicht), `agency`, `act`, `consequence`, `source` (wenn gelesen statt gespielt), `observed` (überschreibt einzelne Angaben des Befunds), `media`, `coded_by`.
+`events` ordnet jeder Event-Nummer ihre Felder zu: `layer` (Pflicht), `timecode` oder `locator` (eins davon Pflicht; `timecode` als `HH:MM:SS` bei Gespieltem, `locator` nennt bei Gelesenem die genaue Stelle), `source` (Pflicht; gelesen: Referenz als Markdown-Link mit Abrufdatum, `[Titel](URL), accessed JJJJ-MM-TT`, mehrere durch `;` getrennt, ohne URL nur die Referenz; gespielt: `own play`), `agency`, `act`, `consequence`, `observed` (überschreibt einzelne Angaben des Befunds), `media`, `coded_by`.
 
 Übersetzungen: `lang` und `status`, bei Bedarf `title`, sonst nichts. Eine Übersetzung enthält die nummerierten Abschnitte, die sie übersetzt, mit denselben Nummern.
 

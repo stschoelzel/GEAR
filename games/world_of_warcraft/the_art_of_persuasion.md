@@ -19,8 +19,8 @@ observed:
 tags: [torture]
 events:
   1:
-    source: "wowclassicdb.com/wotlk/quest/11648; Warcraft Wiki"
-    locator: "quest description"
+    source: "[wowclassicdb.com, quest 11648](https://wowclassicdb.com/wotlk/quest/11648); Warcraft Wiki"
+    locator: "quest offer text"
     layer: fixed
     agency: optional
     act: trigger
@@ -28,7 +28,7 @@ events:
   2:
     observed: {branch: retail, version: unknown}
     source: "Warcraft Wiki, The Art of Persuasion and Imprisoned Beryl Sorcerer"
-    locator: "Notes"
+    locator: "Notes, objective 'Prisoner Interrogated'"
     layer: fixed
     agency: forced
     act: perform
@@ -36,13 +36,13 @@ events:
   3:
     observed: {branch: original, version: "3.0.2"}
     source: "Warcraft Wiki, Prototype Neural Needler"
-    locator: "item tooltip"
+    locator: "item tooltip, Prototype Neural Needler"
     layer: fixed
     agency: reference
   4:
     observed: {branch: retail, version: unknown}
     source: "Warcraft Wiki (Wowpedia), The Art of Persuasion, Notes"
-    locator: "Notes"
+    locator: "Notes, continued use after the objective"
     layer: conditional
     agency: optional
     act: perform

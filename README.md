@@ -10,6 +10,18 @@ The dataset is plain Markdown with YAML frontmatter. Any text editor can read an
 
 The examples compare torture in two games: the quest "The Art of Persuasion" in World of Warcraft: Wrath of the Lich King and the mission "By the Book" in Grand Theft Auto V. Each is one evidence entry. Both are drafts compiled from reference sources and still have to be checked in play.
 
+## Principles
+
+GEAR rests on five principles. DiGAP is the framework they build on, and Zotero is the tool for literature.
+
+1. **Raw and processed kept apart** (OAIS). A source is kept as it was found. An observation is a processed record of it and is written as such. A passage quoted from a walkthrough is raw material and carries its locator.
+2. **Every description has its origin** (OLAC). Each event names its `source`: the reference or walkthrough, with URL and access date where one exists, or `own play` for played material.
+3. **Locators are precise** (Media Fragments). A locator points to the exact place: a timecode for played video, a Media Fragments `#t=` fragment for web video, the named passage or section for text.
+4. **Descriptions are neutral and unambiguous** (ASD-STE100, with EARS and Gherkin sentence patterns). One term has one meaning. Observations follow the [observation style guide](schema/observation_style.md). Evaluation and reading go into Interpretation only.
+5. **Rules, dynamics and effects kept apart** (MDA). Rules and dynamics are observed; effects are interpreted. See [What goes where](#what-goes-where-in-a-file).
+
+DiGAP is described under [Method](#method-digap). Literature is kept in Zotero; see [Literature](#literature).
+
 ## Three ways in
 
 ```
@@ -70,8 +82,8 @@ observed:                      # conditions of observation, for every event
   by: Stephan Schölzel
 events:
   1:
-    source: "wowclassicdb.com/wotlk/quest/11648"   # if read, not played
-    locator: "quest description"                    # or timecode, if played
+    source: "wowclassicdb.com/wotlk/quest/11648"   # required; played: "own play"
+    locator: "quest offer text"                     # played: timecode; read: the exact place
     layer: fixed
     agency: optional
   3:
@@ -101,6 +113,8 @@ Interpretations and notes belong in the evidence or the tag. A reading of one ev
 
 **Metadata** describe the evidence, not the game. Where a file belongs follows from its folder and is not repeated.
 
+**Source and locator** come from the raw material and stay apart from the processed text (OAIS). `source` is required for every event: for read material the reference, with URL and access date where one exists; for played material `own play`. A `locator` names the exact place: a timecode (`HH:MM:SS`) for played video, a Media Fragments `#t=` fragment for web video, the section or passage name for text.
+
 **Coding** uses only controlled values. `tags` must name a file in `tags/`; all other codes come from `vocabularies.yaml`. Free tags are not allowed, because they drift (`torture`, `folter`, `torture_scene`).
 
 **Description** identifies the place in the game: part or expansion, quest or mission, in-game IDs, names. It follows the game's reference source and stands in section 0; an event's Description names only the moment within it.
@@ -108,6 +122,8 @@ Interpretations and notes belong in the evidence or the tag. A reading of one ev
 **Observation** records what is perceivable, with a timecode (played) or a locator (read). No judgement, no assumed intentions. Short quotes are allowed. The [observation style guide](schema/observation_style.md) gives the rules.
 
 **Interpretation** is the reading of this one event, or in section 0 of the whole sequence. Readings across entries belong in a tag.
+
+**Rules, dynamics and effects** (MDA) map onto these layers. The rules the game sets and what happens in play are observed; they go into Description and Observation, coded with `layer` and `agency`. What this does to the player or reader is a reading and goes into Interpretation. The `consequence` field is observed: what the game does next.
 
 ## Coding
 
@@ -183,7 +199,7 @@ Game and tag pages do not list their evidence or literature by hand; scripts and
 1. **Research.** Find out what exists about the game and where the passage is (see below).
 2. **Set up the game.** If it is new: `games/<game>/game.md` with reference source and boundaries.
 3. **Set up the evidence.** Copy `templates/evidence.md` into the game's folder, named after the quest or mission. Fill in section 0 from the reference source, or delete it if there is no sequence.
-4. **Write events.** One numbered section per moment: description, observation, interpretation, kept apart. Code each under `events` with `layer` and `agency`; set `tags` for the entry.
+4. **Write events.** One numbered section per moment: description, observation, interpretation, kept apart. Code each under `events` with `layer` and `agency`, and name a `source` and a precise `locator`; set `tags` for the entry.
 5. **Extend tags.** A new topic gets a file in `tags/`; a new aspect a section in the tag.
 6. **Add literature** in Zotero, with `gear:` tags.
 7. **Check and commit.** `python scripts/validate.py`, then set the status.

@@ -22,8 +22,8 @@ observed:          # applies to every event; an event can override single fields
 tags: []
 events:
   1:
-    # source:      # if read, not played: database, walkthrough, video
-    timecode: "00:00:00"   # or locator: "..." for read material
+    source:        # required; read: reference with URL and access date; played: "own play"
+    timecode: "00:00:00"   # played: HH:MM:SS; read: locator: "the exact place" instead
     layer:         # fixed | conditional | contingent
     agency:        # reference | watching | optional | forced
     # only with optional or forced:
