@@ -1,6 +1,6 @@
 ---
 type: tag
-schema_version: "0.7"
+schema_version: "0.8"
 status: draft
 related: []   # file names in tags/
 mappings: []  # e.g. - {scheme: gop, concept: "...", match: related, url: "..."}

@@ -2,7 +2,7 @@
 
 [English](observation_style.md)
 
-Regeln für den Abschnitt Observation in Events. Teil von Schema 0.7; eine Änderung dieser Regeln ist eine Änderung der Schemaversion.
+Regeln für den Abschnitt Observation in Events. Teil von Schema 0.8; eine Änderung dieser Regeln ist eine Änderung der Schemaversion.
 
 Ziel ist eine Beobachtung, die eine andere Person am Material prüfen kann und die Lesende deuten können, ohne gelenkt zu werden. Grundlage sind die low-inference descriptors der Ethnografie (LeCompte & Goetz 1982), die Audiodeskriptions-Leitlinien von ADLAB (Remael, Reviers & Vercauteren 2015) und die Schreibprinzipien von ASD-STE100.
 

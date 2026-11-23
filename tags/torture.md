@@ -1,6 +1,6 @@
 ---
 type: tag
-schema_version: "0.7"
+schema_version: "0.8"
 status: draft
 title: Torture
 ---

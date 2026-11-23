@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Shows GEAR as a tree, without a browser.
 
-  python scripts/tree.py                     game -> sequence -> event, all games
+  python scripts/tree.py                     game -> evidence -> event, all games
   python scripts/tree.py --game world_of_warcraft
-  python scripts/tree.py --by tag            tag -> game -> sequence -> event, all tags
+  python scripts/tree.py --by tag            tag -> game -> evidence -> event, all tags
   python scripts/tree.py --by tag --tag torture
   python scripts/tree.py --md                also write build/tree_by_game.md and build/tree_by_tag.md
 
@@ -40,7 +40,7 @@ def cite(work, role):
 def build(tables, by):
     """Return a nested list of (label, path or None, children)."""
     games = {g["game"]: g for g in tables["games"]}
-    tags = {t["tag"]: t for t in tables["tags"]}
+    tags = {x["tag"]: x for x in tables["tags"]}
     works, lit, targets_of = literature_index(tables)
 
     def lit_nodes(*keys, both=None):
@@ -56,40 +56,37 @@ def build(tables, by):
         return out
 
     def event_node(e):
-        meta = ", ".join(x for x in (e["layer"], e["agency"]) + tuple(e["tags"]) if x)
-        kids = lit_nodes(("event", e["id"]))
-        return (f"{e['id']}  {e['title']}  · {meta}", e["path"], kids)
+        meta = ", ".join(x for x in (e["layer"], e["agency"]) if x)
+        return (f"{e['n']}. {e['title']}  · {meta}", f"{e['path']}#{e['anchor']}", lit_nodes(("event", e["id"])))
 
-    sequences = {q["id"]: q for q in tables["sequences"]}
-
-    def seq_nodes(evs, gname, tag=None):
-        per = defaultdict(list)
-        for e in evs:
-            per[e["sequence"]].append(e)
+    def evidence_nodes(entries):
         out = []
-        for sid, es in sorted(per.items()):
-            q = sequences[sid]
-            kids = lit_nodes(("sequence", sid)) + [event_node(e) for e in sorted(es, key=lambda e: e["id"])]
-            out.append((f"{q['title']}  ({q['unit']}, {len(es)})", q["path"], kids))
+        for ev in sorted(entries, key=lambda x: x["id"]):
+            kids = lit_nodes(("evidence", ev["id"]))
+            if ev["sequence_title"]:
+                kids.append((f"0. {ev['sequence_title']}  ({ev['unit']})", f"{ev['path']}#{ev['sequence_anchor']}", []))
+            kids += [event_node(e) for e in tables["events"] if e["evidence"] == ev["id"]]
+            tags = ", ".join(ev["tags"])
+            out.append((f"{ev['id']}  {ev['title']}  ({ev['events']} events{', ' + tags if tags else ''})", ev["path"], kids))
         return out
 
     tree = []
     if by == "game":
         for gname, g in sorted(games.items()):
-            evs = [e for e in tables["events"] if e["game"] == gname]
-            kids = lit_nodes(("game", gname)) + seq_nodes(evs, gname)
-            tree.append((f"{g['title']}  ({len(evs)} events)", g["path"], kids))
+            evs = [x for x in tables["evidence"] if x["game"] == gname]
+            kids = lit_nodes(("game", gname)) + evidence_nodes(evs)
+            tree.append((f"{g['title']}  ({len(evs)} evidence)", g["path"], kids))
     else:
-        for t, tag in sorted(tags.items()):
-            evs = [e for e in tables["events"] if t in e["tags"]]
-            kids = lit_nodes(("tag", t))
+        for name, tag in sorted(tags.items()):
+            evs = [x for x in tables["evidence"] if name in x["tags"]]
+            kids = lit_nodes(("tag", name))
             per_game = defaultdict(list)
-            for e in evs:
-                per_game[e["game"]].append(e)
+            for x in evs:
+                per_game[x["game"]].append(x)
             for gname, es in sorted(per_game.items()):
-                gkids = lit_nodes(both=(("game", gname), ("tag", t))) + seq_nodes(es, gname, t)
+                gkids = lit_nodes(both=(("game", gname), ("tag", name))) + evidence_nodes(es)
                 kids.append((f"{games[gname]['title']}  ({len(es)})", games[gname]["path"], gkids))
-            tree.append((f"{tag['title']}  ({len(evs)} events)", tag["path"], kids))
+            tree.append((f"{tag['title']}  ({len(evs)} evidence)", tag["path"], kids))
     return tree
 
 

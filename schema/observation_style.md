@@ -2,7 +2,7 @@
 
 [Deutsch](observation_style.de.md)
 
-Rules for the section Observation in events. Part of schema 0.7; a change to these rules is a change of the schema version.
+Rules for the section Observation in events. Part of schema 0.8; a change to these rules is a change of the schema version.
 
 The aim is an observation that another person can check against the material and that a reader can interpret without being led. Based on low-inference descriptors from ethnography (LeCompte & Goetz 1982), the ADLAB audio description guidelines (Remael, Reviers & Vercauteren 2015) and the writing principles of ASD-STE100.
 

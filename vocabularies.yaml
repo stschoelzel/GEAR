@@ -2,16 +2,16 @@
 # Adding a language: add it to `lang` and add labels below. Missing labels fall back to en, then de.
 # Tags are not listed here: every file in tags/ is a tag.
 
-schema_version: "0.7"
+schema_version: "0.8"
 
 lang:
   en: {en: English, de: Englisch}
   de: {en: German, de: Deutsch}
 
 type:
-  game:    {en: game, de: Spiel}
-  sequence: {en: sequence, de: Sequenz}
-  event:   {en: event, de: Ereignis}
+  game:     {en: game, de: Spiel}
+  evidence: {en: evidence, de: Befund}
+  event:    {en: event, de: Ereignis}
   tag:     {en: tag, de: Schlagwort}
 
 status:
@@ -19,7 +19,7 @@ status:
   reviewed: {en: reviewed, de: geprüft}
   citable:  {en: citable, de: zitierfähig}
 
-# Kind of place in the game that a sequence is (DiGAP item 20, unitizing).
+# Kind of place in the game that section 0 of an evidence entry is (DiGAP item 20, unitizing).
 unit:
   quest:    {en: quest, de: Quest}
   mission:  {en: mission, de: Mission}
@@ -84,7 +84,7 @@ mapping_match:
   narrower: {en: narrower, de: enger}
   related: {en: related, de: verwandt}
 
-# How a work of literature relates to a game, sequence, event or tag (Zotero tag gear:<target>:<role>).
+# How a work of literature relates to a game, evidence entry, event or tag (Zotero tag gear:<target>:<role>).
 literature_role:
   analysis:   {en: analysis, de: Analyse}
   coverage:   {en: coverage, de: Berichterstattung}
@@ -94,33 +94,3 @@ literature_role:
   context:    {en: context, de: Kontext}
   source:     {en: primary source, de: Primärquelle}
 
-# Groups for content_warnings.
-content_warning_group:
-  violence:        {en: violence and war, de: Gewalt und Krieg}
-  fear:            {en: fear and horror, de: Angst und Horror}
-  burdensome:      {en: burdensome themes, de: belastende Themen}
-  sexuality:       {en: sexuality, de: Sexualität}
-  language:        {en: language, de: Sprache}
-  substances:      {en: addictive substances, de: Suchtmittel}
-  gambling:        {en: gambling and monetisation, de: Glücksspiel und Monetarisierung}
-  discrimination:  {en: discrimination, de: Diskriminierung}
-
-# Values used in content_warnings. Each belongs to one group. How the player is involved is coded in `agency`.
-content_warnings:
-  torture:         {group: violence, en: torture, de: Folter}
-  killing:         {group: violence, en: killing, de: Tötung}
-  violence:        {group: violence, en: other violence, de: sonstige Gewalt}
-  war:             {group: violence, en: war, de: Krieg}
-  body_horror:     {group: fear, en: body horror, de: Körperhorror}
-  jump_scare:      {group: fear, en: jump scare, de: Schreckmoment}
-  suicide:         {group: burdensome, en: suicide, de: Suizid}
-  self_harm:       {group: burdensome, en: self-harm, de: Selbstverletzung}
-  sexual_violence: {group: sexuality, en: sexual violence, de: sexualisierte Gewalt}
-  sexual_content:  {group: sexuality, en: sexual content, de: sexuelle Inhalte}
-  slurs:           {group: language, en: slurs, de: Beleidigungen}
-  drugs:           {group: substances, en: drugs, de: Drogen}
-  alcohol:         {group: substances, en: alcohol, de: Alkohol}
-  gambling:        {group: gambling, en: gambling, de: Glücksspiel}
-  loot_boxes:      {group: gambling, en: loot boxes, de: Lootboxen}
-  racism:          {group: discrimination, en: racism, de: Rassismus}
-  sexism:          {group: discrimination, en: sexism, de: Sexismus}

@@ -1,7 +1,7 @@
 ---
 id: GAME-GTA5
 type: game
-schema_version: "0.7"
+schema_version: "0.8"
 status: draft
 title: Grand Theft Auto V
 ---
@@ -20,4 +20,4 @@ Action-adventure game by Rockstar North, published by Rockstar Games in 2013 and
 
 <!-- DiGAP items 5 to 7 and 15 to 21: how this game was played for GEAR -->
 
-Not yet played for GEAR. The events so far are compiled from reference sources; each names its source in `observed`.
+Not yet played for GEAR. The evidence so far is compiled from reference sources; each event names its source.

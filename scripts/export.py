@@ -3,7 +3,7 @@
 
 Run from the repository root:  python scripts/export.py
 Writes build/ (not committed):
-  games.csv, sequences.csv, events.csv, tags.csv, translations.csv,
+  games.csv, evidence.csv, events.csv, tags.csv, translations.csv,
   literature.csv, literature_links.csv, labels.csv, gear.json, gear.db
 gear.db is SQLite with full-text search; open it with  datasette build/gear.db -m datasette.yaml
 """
@@ -18,7 +18,12 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "build"
 VOC = yaml.safe_load((ROOT / "vocabularies.yaml").read_text(encoding="utf-8"))
-CODED = ["layer", "agency", "engagement", "status", "content_warnings", "lang"]
+CODED = ["layer", "agency", "engagement", "status", "lang"]
+# section names in German translations
+DE_SECTIONS = {"beschreibung": "description", "beobachtung": "observation", "deutung": "interpretation",
+               "aspekte": "aspects", "diskussion": "discussion", "abgrenzung": "boundaries",
+               "referenzquelle": "reference_source"}
+NUMBERED = re.compile(r"^##\s+(\d+)\.\s+(.+?)\s*$")
 
 
 def read(path):
@@ -39,6 +44,45 @@ def read(path):
             continue
         sections.setdefault(current, []).append(line)
     return fm, {k: "\n".join(v).strip() for k, v in sections.items()}
+
+
+def key(heading):
+    k = re.sub(r"\W+", "_", heading.strip().lower()).strip("_")
+    return DE_SECTIONS.get(k, k)
+
+
+def read_numbered(path):
+    """Evidence file: (frontmatter, {n: {"title", "description", ...}}).
+
+    Numbered sections are "## <n>. <title>", their parts "### Description" and so on.
+    """
+    text = path.read_text(encoding="utf-8")
+    fm, body = {}, text
+    if text.startswith("---"):
+        _, raw, body = text.split("---", 2)
+        fm = yaml.safe_load(raw) or {}
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+    parts, n, part = {}, None, None
+    for line in body.splitlines():
+        m = NUMBERED.match(line)
+        if m:
+            n, part = int(m.group(1)), "_text"
+            parts[n] = {"title": m.group(2), "_text": []}
+            continue
+        if n is None:
+            continue
+        m = re.match(r"^###\s+(.+?)\s*$", line)
+        if m:
+            part = key(m.group(1))
+            parts[n][part] = []
+            continue
+        parts[n][part].append(line)
+    return fm, {n: {k: (v if k == "title" else "\n".join(v).strip()) for k, v in s.items()} for n, s in parts.items()}
+
+
+def anchor(n, title):
+    """GitHub's anchor for the heading "## <n>. <title>"."""
+    return re.sub(r"[^\w\- ]", "", f"{n}. {title}".lower()).replace(" ", "-")
 
 
 def split_lang(path):
@@ -86,7 +130,7 @@ def read_bib(path):
 def collect():
     """Read all files and return the tables as a dict of lists."""
     rel = lambda p: p.relative_to(ROOT).as_posix()
-    games, sequences, events, tags, translations, labels = [], [], [], [], [], []
+    games, evidence, events, tags, translations, labels = [], [], [], [], [], []
     literature, links = [], []
 
     for game_md in sorted((ROOT / "games").glob("*/game.md")):
@@ -94,56 +138,57 @@ def collect():
         fm, sec = read(game_md)
         games.append({"id": fm.get("id"), "game": folder, "title": fm.get("title"),
                       "wikidata": fm.get("wikidata") or "", "status": fm.get("status"),
-                      "engagement": fm.get("engagement", ""),
+                      "engagement": fm.get("engagement", ""), "branches": fm.get("branches") or {},
+                      "versions": sec.get("versions", ""),
                       "description": sec.get("description", ""), "reference_source": sec.get("reference_source", ""),
                       "boundaries": sec.get("boundaries", ""),
                       "path": rel(game_md)})
         game_title = fm.get("title")
 
-        for seq_md in sorted(game_md.parent.glob("*/sequence.md")):
-            qfm, qsec = read(seq_md)
-            sequences.append({"id": qfm.get("id"), "game": folder, "game_title": game_title,
-                              "folder": seq_md.parent.name, "title": qfm.get("title"), "unit": qfm.get("unit", ""),
-                              "status": qfm.get("status"), "description": qsec.get("description", ""),
-                              "interpretation": qsec.get("interpretation", ""), "path": rel(seq_md)})
-            seq_id, seq_title = qfm.get("id"), qfm.get("title")
-            for ev in sorted(seq_md.parent.glob("*.md")):
-                if ev.name.startswith("sequence."):
-                    if ev.name != "sequence.md":
-                        tfm, tsec = read(ev)
-                        translations.append({"of_path": rel(seq_md), "lang": split_lang(ev)[1], "title": tfm.get("title", ""),
-                                             "status": tfm.get("status"), "text": "\n\n".join(v for v in tsec.values() if v), "path": rel(ev),
-                                             "sections": {k: v for k, v in tsec.items() if k != "_intro"}})
+        for ev_md in sorted(game_md.parent.glob("*.md")):
+            if ev_md.name == "game.md":
+                continue
+            base, lang = split_lang(ev_md)
+            efm, parts = read_numbered(ev_md)
+            if lang:
+                translations.append({"of_path": rel(ev_md.parent / f"{base}.md"), "lang": lang,
+                                     "title": efm.get("title", ""), "status": efm.get("status"),
+                                     "text": "\n\n".join(v for s in parts.values() for v in s.values() if v),
+                                     "path": rel(ev_md), "sections": {str(k): v for k, v in parts.items()}})
+                continue
+            eid, obs0 = efm.get("id"), efm.get("observed") or {}
+            seq = parts.get(0, {})
+            evidence.append({"id": eid, "game": folder, "game_title": game_title, "name": base,
+                             "title": efm.get("title"), "lang": efm.get("lang", "en"), "status": efm.get("status"),
+                             "unit": efm.get("unit", ""), "first_appeared": efm.get("first_appeared") or {},
+                             "variant_of": efm.get("variant_of", ""), "sequence_title": seq.get("title", ""),
+                             "sequence_anchor": anchor(0, seq["title"]) if seq else "",
+                             "sequence_description": seq.get("description", ""),
+                             "sequence_interpretation": seq.get("interpretation", ""),
+                             "tags": as_list(efm.get("tags")),
+                             "events": len([n for n in parts if n > 0]), "path": rel(ev_md)})
+            meta = efm.get("events") or {}
+            for n, sec in sorted(parts.items()):
+                if n == 0:
                     continue
-                efm, esec = read(ev)
-                base, lang = split_lang(ev)
-                if lang:
-                    translations.append({"of_path": rel(ev.parent / f"{base}.md"), "lang": lang,
-                                         "title": efm.get("title", ""), "status": efm.get("status"),
-                                         "text": "\n\n".join(v for v in esec.values() if v), "path": rel(ev),
-                                         "sections": {k: v for k, v in esec.items() if k != "_intro"}})
-                    continue
-                obs = efm.get("observed") or {}
-                events.append({"id": efm.get("id"), "game": folder, "game_title": game_title,
-                               "sequence": seq_id, "sequence_title": seq_title,
-                               "title": efm.get("title"), "lang": efm.get("lang", "en"),
-                               "observed_date": str(obs.get("date", "")), "version": str(obs.get("version", "")),
+                em = meta.get(n) or {}
+                obs = {**obs0, **(em.get("observed") or {})}
+                cons = em.get("consequence") or {}
+                events.append({"id": f"{eid}.{n}", "evidence": eid, "n": n, "game": folder, "game_title": game_title,
+                               "evidence_title": efm.get("title"), "title": sec.get("title"), "lang": efm.get("lang", "en"),
+                               "observed_date": str(obs.get("date", "")), "branch": obs.get("branch", ""),
+                               "version": str(obs.get("version", "")),
                                "platform": obs.get("platform", ""), "language": obs.get("language", ""),
                                "observed_by": obs.get("by", ""), "server": obs.get("server", ""),
-                               "season": obs.get("season", ""), "observed_source": obs.get("source", ""),
-                               "layer": efm.get("layer", ""), "agency": efm.get("agency", ""),
-                               "act": efm.get("act", ""),
-                               "if_done": (efm.get("consequence") or {}).get("if_done", ""),
-                               "if_not_done": (efm.get("consequence") or {}).get("if_not_done", ""),
+                               "season": obs.get("season", ""), "source": em.get("source", ""),
+                               "layer": em.get("layer", ""), "agency": em.get("agency", ""), "act": em.get("act", ""),
+                               "if_done": cons.get("if_done", ""), "if_not_done": cons.get("if_not_done", ""),
                                "tags": as_list(efm.get("tags")),
-                               "content_warnings": as_list(efm.get("content_warnings")),
-                               "cw_checked": "content_warnings" in efm,
-                               "timecode": str(efm.get("timecode", "")), "locator": efm.get("locator", ""),
-                               "media": as_list(efm.get("media")), "coded_by": efm.get("coded_by") or obs.get("by", ""),
+                               "timecode": str(em.get("timecode", "")), "locator": em.get("locator", ""),
+                               "media": as_list(em.get("media")), "coded_by": em.get("coded_by") or obs.get("by", ""),
                                "status": efm.get("status"),
-                               "description": esec.get("description", ""), "observation": esec.get("observation", ""),
-                               "interpretation": esec.get("interpretation", ""), "path": rel(ev)})
-
+                               "description": sec.get("description", ""), "observation": sec.get("observation", ""),
+                               "interpretation": sec.get("interpretation", ""), "path": rel(ev_md), "anchor": anchor(n, sec.get("title", ""))})
 
     for tag_md in sorted((ROOT / "tags").glob("*.md")):
         tfm, tsec = read(tag_md)
@@ -160,6 +205,7 @@ def collect():
 
     tag_names = {t["tag"] for t in tags}
     game_names = {g["game"] for g in games}
+    event_ids = {e["id"] for e in events}
     for entry in read_bib(ROOT / "literature" / "game_evidence_archive_and_repository.bib"):
         kws = [k.strip() for k in re.split(r"[,;]", entry.get("keywords", "")) if k.strip()]
         literature.append({k: entry.get(k, "") for k in ("citekey", "entrytype", "author", "editor", "title", "year", "journal", "booktitle", "publisher", "doi", "url", "number", "nationality")})
@@ -171,7 +217,7 @@ def collect():
                 continue  # rejected by validate.py
             target, role = parts
             kind = ("tag" if target in tag_names else "game" if target in game_names
-                    else "sequence" if target.startswith("SEQ-") else "event")
+                    else "event" if target in event_ids else "evidence")
             links.append({"citekey": entry["citekey"], "target_type": kind, "target": target or "", "role": role})
 
     for field, values in VOC.items():
@@ -181,7 +227,7 @@ def collect():
                     labels.append({"field": field, "value": key, "en": lab.get("en", ""), "de": lab.get("de", ""),
                                    "group": lab.get("group", "")})
 
-    return {"games": games, "sequences": sequences, "events": events, "tags": tags,
+    return {"games": games, "evidence": evidence, "events": events, "tags": tags,
             "translations": translations, "literature": literature, "literature_links": links, "labels": labels}
 
 
@@ -224,25 +270,28 @@ def main():
     if db_path.exists():
         db_path.unlink()
     db = sqlite3.connect(db_path)
+    empty = {"literature": ["citekey", "entrytype", "author", "editor", "title", "year", "journal", "booktitle",
+                            "publisher", "doi", "url", "number", "nationality"],
+             "literature_links": ["citekey", "target_type", "target", "role"],
+             "translations": ["of_path", "lang", "title", "status", "text", "path", "sections"]}
     for name, rows in tables.items():
-        if not rows:
+        if not rows and name not in empty:
             continue
-        cols = list(rows[0])
+        cols = list(rows[0]) if rows else empty[name]
         db.execute(f"CREATE TABLE [{name}] ({', '.join(f'[{c}]' for c in cols)})")
         db.executemany(f"INSERT INTO [{name}] VALUES ({', '.join('?' for _ in cols)})", [list(flat(r).values()) for r in rows])
     # helper tables for many-to-many browsing
-    db.execute("CREATE TABLE event_tags (event TEXT, tag TEXT)")
-    db.executemany("INSERT INTO event_tags VALUES (?, ?)", [(e["id"], t) for e in events for t in e["tags"]])
-    db.execute("CREATE TABLE event_content_warnings (event TEXT, content_warning TEXT)")
-    db.executemany("INSERT INTO event_content_warnings VALUES (?, ?)", [(e["id"], c) for e in events for c in e["content_warnings"]])
+    evidence = tables["evidence"]
+    db.execute("CREATE TABLE evidence_tags (evidence TEXT, tag TEXT)")
+    db.executemany("INSERT INTO evidence_tags VALUES (?, ?)", [(e["id"], t) for e in evidence for t in e["tags"]])
     # full-text search, in the layout Datasette recognises
     fts = {"events": ["title", "description", "observation", "interpretation"],
-           "sequences": ["title", "description", "interpretation"],
+           "evidence": ["title", "sequence_title", "sequence_description", "sequence_interpretation"],
            "tags": ["title", "definition", "aspects", "discussion"],
            "translations": ["title", "text"],
            "literature": ["author", "title"]}
     for table, cols in fts.items():
-        if not tables[table]:
+        if not tables[table] and table not in empty:
             continue
         c = ", ".join(f"[{x}]" for x in cols)
         db.execute(f"CREATE VIRTUAL TABLE [{table}_fts] USING FTS5 ({c}, content=[{table}])")

@@ -10,7 +10,7 @@ Der Datensatz besteht aus Markdown-Dateien mit YAML-Frontmatter und lässt sich 
 
 Maßgeblich ist die [englische Fassung](README.md). Feldnamen und Werte sind englisch; ihre deutschen Bezeichnungen stehen in `vocabularies.yaml`.
 
-Die Beispiele vergleichen Folter in zwei Spielen: die Quest "The Art of Persuasion" in World of Warcraft: Wrath of the Lich King und die Mission "By the Book" in Grand Theft Auto V. Beide sind Entwürfe aus Referenzquellen und müssen noch im Spiel geprüft werden. Monopoly ist mit seiner Literatur angelegt, hat aber noch keine Events.
+Die Beispiele vergleichen Folter in zwei Spielen: die Quest "The Art of Persuasion" in World of Warcraft: Wrath of the Lich King und die Mission "By the Book" in Grand Theft Auto V. Jede ist ein Befund. Beide sind Entwürfe aus Referenzquellen und müssen noch im Spiel geprüft werden.
 
 ## Drei Zugänge
 
@@ -18,25 +18,20 @@ Die Beispiele vergleichen Folter in zwei Spielen: die Quest "The Art of Persuasi
 games/                                      ins Spiel schauen
 ├── grand_theft_auto_v/
 │   ├── game.md
-│   └── by_the_book/                        eine Sequenz: die Mission
-│       ├── sequence.md
-│       └── 0001_ordered_to_torture.md …    ihre Events
-├── monopoly/
-│   └── game.md
+│   └── by_the_book.md                      Befund: die Mission, mit ihren Events
 └── world_of_warcraft/
     ├── game.md
-    └── the_art_of_persuasion/              eine Sequenz: die Quest
-        ├── sequence.md
-        └── 0001_accepting_the_quest.md …
+    ├── the_art_of_persuasion.md            Befund: die Quest, mit ihren Events
+    └── the_art_of_persuasion.de.md         deutsche Übersetzung von Teilen davon
 tags/                                       nach Begriffen suchen
 └── torture.md
 literature/                                 Fachliteratur nachschlagen
 └── game_evidence_archive_and_repository.bib
 ```
 
-**Über das Spiel:** den Ordner des Spiels öffnen. Darin liegen die Spieldatei und je Sequenz ein Ordner, also die Stelle im Spiel wie eine Quest oder Mission. Ein Sequenzordner enthält die Sequenzdatei und ihre Events.
+**Über das Spiel:** den Ordner des Spiels öffnen. Darin liegen die Spieldatei und je Befund eine Datei.
 
-**Über Begriffe:** eine Datei in `tags/` öffnen. Sie definiert den Begriff, beschreibt seine Aspekte und führt zu allen Events und aller Literatur dazu, über Spiele hinweg.
+**Über Begriffe:** eine Datei in `tags/` öffnen. Sie definiert den Begriff, beschreibt seine Aspekte und führt zu allen Befunden und aller Literatur dazu, über Spiele hinweg.
 
 **Über Literatur:** `literature/game_evidence_archive_and_repository.bib` enthält die Fachliteratur, mit Zotero-Tags, die sagen, wo und wie ein Werk relevant ist.
 
@@ -45,23 +40,64 @@ literature/                                 Fachliteratur nachschlagen
 | Typ | Ort | Was es ist |
 |---|---|---|
 | game | `games/<spiel>/game.md` | das Spiel, seine Referenzquelle und wie es für GEAR gespielt wurde |
-| sequence | `games/<spiel>/<sequenz>/sequence.md` | eine Stelle im Spiel: Quest, Mission, Kapitel, Level oder Szene, mit spielinternen IDs und Kontext |
-| event | `games/<spiel>/<sequenz>/<nnnn>_<name>.md` | ein einzelner Moment der Sequenz als Beleg, mit den Bedingungen, unter denen er beobachtet wurde |
+| evidence (Befund) | `games/<spiel>/<name>.md` | ein Befund, etwa eine Quest oder Mission: die Sequenz und ihre Events in nummerierten Abschnitten |
 | tag | `tags/<name>.md` | ein Begriff: Definition, Aspekte, Diskussion |
 
-Eine Sequenz ist der Rahmen, ihre Events sind die Momente darin. Was die Quest oder Mission ist (IDs, Questgeber, Ort, vorherige und nächste) steht einmal in `sequence.md`; ein Event beschreibt nur seinen Moment. Eine Sequenz kann auch eine Interpretation des Ganzen tragen.
+Ein Befund ist eine Datei. Ihre Abschnitte sind nummeriert:
 
-Jedes Event trägt seine Beobachtungsbedingungen in `observed`: Datum, Version, Plattform, Sprache, wer beobachtet hat und, wenn gelesen statt gespielt wurde, die Quelle. Ein Event lässt sich deshalb für sich lesen und zitieren. Die Nummer im Dateinamen ist die Nummer der ID (`0002_…` ist `EVT-WOW-0002`).
+```
+## 0. The Art of Persuasion        die Sequenz: die Stelle im Spiel, wenn es eine gibt
+### Description                    Teil, Quest und Quest-ID, Questgeber, Ort, vorherige und nächste
+### Interpretation                 optional: Deutung des Ganzen
 
-Deutungen und Notizen gehören ins Event oder in den Tag. Die Deutung eines Events steht in seiner Interpretation; Deutungen über Events hinweg, Begriffe und offene Fragen stehen im Tag. Offene Fragen werden mit "Open:" markiert. Unfertige private Notizen gehören nicht in GEAR; sie bleiben in `_local/` (wird nicht committet) oder außerhalb des Repos.
+## 1. Accepting the quest          ein Event: ein Moment der Sequenz
+### Description
+### Observation
+### Interpretation
+
+## 2. Using the Neural Needler
+…
+```
+
+Abschnitt 0 ist die Sequenz im Sinn von DiGAP (Item 20, die Einheit, in die das Spiel geteilt wurde). Er steht nur, wo er zutrifft, etwa bei einer Quest, Mission, einem Kapitel oder Level, und braucht dann `unit` im Frontmatter. Events beginnen bei 1 und sind lückenlos nummeriert, in der Reihenfolge des Spiels. Ein Event beschreibt nur seinen Moment; was die Quest oder Mission ist, steht einmal in Abschnitt 0.
+
+Das Frontmatter enthält, was für den ganzen Befund gilt (`observed`, `tags`), und unter `events` die Kodierung jedes Events nach seiner Nummer:
+
+```yaml
+observed:                      # Beobachtungsbedingungen, für jedes Event
+  date: 2026-11-22
+  version: "Wrath of the Lich King Classic"
+  platform: web
+  language: enUS
+  by: Stephan Schölzel
+events:
+  1:
+    source: "wowclassicdb.com/wotlk/quest/11648"   # wenn gelesen statt gespielt
+    locator: "quest description"                    # oder timecode, wenn gespielt
+    layer: fixed
+    agency: optional
+  3:
+    observed: {version: "patch 3.0.2"}              # ein Event kann einzelne Angaben überschreiben
+    …
+```
+
+### Versionen und Ausgaben
+
+Manche Spiele gibt es in mehreren Ausgaben nebeneinander, etwa Retail und die Classic-Zweige von World of Warcraft. Ein solches Spiel führt seine Ausgaben unter `branches` in `game.md` auf und erklärt sie im Abschnitt Versions. `observed.branch` sagt dann, in welcher Ausgabe beobachtet wurde; ein Event kann das überschreiben.
+
+`first_appeared` hält fest, wo eine Sequenz zuerst auftauchte: Ausgabe (wenn das Spiel welche hat), Version oder Patch und eine Notiz wie Erweiterung und Jahr. Wichtig ist, dass es sie gab, nicht ob es sie noch gibt. Eine Sequenz, die es auch in späteren Ausgaben gibt, bleibt ein Befund, solange ihr Inhalt gleich ist. Weicht er ab, bekommt die Ausgabe einen eigenen Befund, verknüpft mit `variant_of: <Befund-ID>`. Spiele ohne Ausgaben brauchen nichts davon; dort reicht `version`.
+
+Ein Event wird als `EVD-WOW-0001.2` zitiert: ID des Befunds und Nummer des Abschnitts. Der Dateiname ist frei (`a-z`, `0-9`, `_`), meist der Name der Quest oder Mission.
+
+Deutungen und Notizen gehören in den Befund oder in den Tag. Die Deutung eines Events steht in seiner Interpretation, die Deutung der ganzen Sequenz in Abschnitt 0; Deutungen über Befunde hinweg, Begriffe und offene Fragen stehen im Tag. Offene Fragen werden mit "Open:" markiert. Unfertige private Notizen gehören nicht in GEAR; sie bleiben in `_local/` (wird nicht committet) oder außerhalb des Repos.
 
 ## Was wohin gehört
 
 | Schicht | Ort | Frage | Beispiel |
 |---|---|---|---|
-| Metadaten | Frontmatter | Was ist diese Datei, woher stammt der Beleg? | `id`, `status`, `observed` |
-| Kodierung | Frontmatter | Welche festen Kategorien treffen zu? | `layer`, `agency`, `tags`, `content_warnings` |
-| Beschreibung (Description) | Text | Was ist das für eine Stelle im Spiel? | in der Sequenz: Erweiterung, Quest und Quest-ID, Questgeber, Ort; im Event: der Moment |
+| Metadaten | Frontmatter | Was ist diese Datei, woher stammt der Beleg? | `id`, `status`, `observed`, `source`, `locator` |
+| Kodierung | Frontmatter | Welche festen Kategorien treffen zu? | `layer`, `agency`, `tags` |
+| Beschreibung (Description) | Text | Was ist das für eine Stelle im Spiel? | in Abschnitt 0: Erweiterung, Quest und Quest-ID, Questgeber, Ort; im Event: der Moment |
 | Beobachtung (Observation) | Text | Was war zu sehen oder zu tun? | "Nach jeder Anwendung flüstert der Gefangene eine Zeile." |
 | Interpretation | Text | Was bedeutet das? | Deutung, Fachliteratur, Links zu Aspekten eines Tags |
 
@@ -69,11 +105,11 @@ Deutungen und Notizen gehören ins Event oder in den Tag. Die Deutung eines Even
 
 **Kodierung** nutzt nur kontrollierte Werte. `tags` muss eine Datei in `tags/` nennen; alle anderen Werte stehen in `vocabularies.yaml`. Freie Tags gibt es nicht, weil sie auseinanderlaufen (`torture`, `folter`, `torture_scene`).
 
-**Beschreibung** kennzeichnet die Stelle im Spiel: Teil oder Erweiterung, Quest oder Mission, spielinterne IDs, Namen. Sie folgt der Referenzquelle des Spiels und steht in der Sequenz; die Beschreibung im Event nennt nur den Moment darin.
+**Beschreibung** kennzeichnet die Stelle im Spiel: Teil oder Erweiterung, Quest oder Mission, spielinterne IDs, Namen. Sie folgt der Referenzquelle des Spiels und steht in Abschnitt 0; die Beschreibung eines Events nennt nur den Moment darin.
 
 **Beobachtung** hält fest, was wahrnehmbar ist, mit Timecode (gespielt) oder Fundstelle (gelesen). Keine Wertung, keine Absicht unterstellen. Kurze Zitate sind erlaubt. Die Regeln stehen im [Leitfaden für Beobachtungen](schema/observation_style.de.md).
 
-**Interpretation** ist die Deutung dieses einen Events. Deutungen über mehrere Events gehören in einen Tag.
+**Interpretation** ist die Deutung dieses einen Events, in Abschnitt 0 die der ganzen Sequenz. Deutungen über mehrere Befunde gehören in einen Tag.
 
 ## Kodierung
 
@@ -91,7 +127,7 @@ Die Unterscheidung läuft quer zu Erzählung und Regeln: Eine Regel kann fest se
 
 ### Beteiligung (agency)
 
-Wie ist die Spieler:in an dem beteiligt, was das Event zeigt? `reference` (nur erwähnt), `watching` (gezeigt, ohne Handlung), `optional` (kann es ausführen), `forced` (muss es ausführen, um weiterzukommen).
+Wie ist die Spieler:in an dem beteiligt, was das Event zeigt? Kodiert je Event unter `events`. `reference` (nur erwähnt), `watching` (gezeigt, ohne Handlung), `optional` (kann es ausführen), `forced` (muss es ausführen, um weiterzukommen).
 
 Bei `optional` und `forced` kommen zwei Felder dazu:
 
@@ -106,25 +142,16 @@ consequence:
 
 Folgen: `none` (keine), `progress` (Fortschritt), `reward` (Belohnung), `penalty` (Nachteil), `branch` (verändert spätere Inhalte), `blocks` (kein Weiterkommen), `fail` (Scheitern), `unknown` (noch unbekannt). Was genau geschieht, steht in der Beobachtung.
 
-### Inhaltshinweise
-
-| Zustand | Bedeutung |
-|---|---|
-| Feld fehlt | nicht geprüft |
-| `content_warnings: []` | geprüft, nichts gefunden |
-| `content_warnings: [torture]` | geprüft, Werte aus `vocabularies.yaml` |
-
-Die Werte sind gruppiert (Gewalt, Angst, belastende Themen, Sexualität, Sprache, Suchtmittel, Glücksspiel, Diskriminierung); siehe `vocabularies.yaml`.
 
 ## Tags
 
-Tags werden sparsam vergeben. Ein Tag benennt ein breites Thema, etwa `torture`; feinere Unterscheidungen sind Abschnitte unter Aspects in der Datei des Tags, etwa ausgelagerte Folter, weiße Folter oder Folter über die Information hinaus. Ein Event trägt den Tag und verlinkt in seiner Interpretation auf den Aspekt (`tags/torture.md#white-torture`).
+Tags werden sparsam vergeben. Ein Tag benennt ein breites Thema, etwa `torture`; feinere Unterscheidungen sind Abschnitte unter Aspects in der Datei des Tags, etwa ausgelagerte Folter, weiße Folter oder Folter über die Information hinaus. Ein Befund trägt den Tag; ein Event verlinkt in seiner Interpretation auf den Aspekt (`tags/torture.md#white-torture`).
 
 Eine Tag-Datei ist Registereintrag und Zettel zugleich: Definition, Aspekte, Diskussion. Sie ist das Codebuch von GEAR (DiGAP Item 27). `related` verbindet eng verwandte Tags; `mappings` verweist auf Begriffe anderer Vokabulare (VGMS, Game Ontology Project, Gameplay Design Patterns, Wikidata), ohne sie zu kopieren.
 
 ## Literatur
 
-GEAR sammelt Fachliteratur mit konkretem Bezug zu einem Spiel, einer Sequenz, einem Event oder einem Befund in GEAR. Allgemeine Texte der Game Studies ohne solchen Bezug werden nicht gesammelt; Texte, auf die sich diese Dokumentation stützt, stehen unter [References](README.md#references).
+GEAR sammelt Fachliteratur mit konkretem Bezug zu einem Spiel, einem Befund, einem Event oder einem Tag in GEAR. Allgemeine Texte der Game Studies ohne solchen Bezug werden nicht gesammelt; Texte, auf die sich diese Dokumentation stützt, stehen unter [References](README.md#references).
 
 Die Literatur wird in Zotero gepflegt, in einer eigenen Sammlung. Better BibTeX exportiert diese Sammlung automatisch nach `literature/game_evidence_archive_and_repository.bib`; GEAR liest diese Datei nur. In den Export-Einstellungen von Better BibTeX die Felder `file` (lokale Pfade) und `abstract` (Verlagstexte, nicht unter CC BY) weglassen.
 
@@ -134,11 +161,10 @@ Ein Werk wird über Zotero-Tags der Form `gear:<ziel>:<rolle>` mit GEAR verbunde
 |---|---|
 | `gear:torture:analysis` | analysiert das Thema des Tags `torture` |
 | `gear:grand_theft_auto_v:coverage` | berichtet über das Spiel in `games/grand_theft_auto_v/` |
-| `gear:SEQ-WOW-001:analysis` | analysiert diese Sequenz, die Quest als Ganzes |
-| `gear:EVT-GTA5-0004:analysis` | analysiert dieses eine Event |
-| `gear:monopoly:source` | eine Primärquelle zum Spiel, hier seine Patente |
+| `gear:EVD-WOW-0001:analysis` | analysiert diesen Befund, die Quest als Ganzes |
+| `gear:EVD-GTA5-0001.4:analysis` | analysiert dieses eine Event |
 
-Jeder Tag braucht ein Ziel: einen Tag, einen Spielordner, eine Sequenz-ID oder eine Event-ID. Rollen: `analysis` (Analyse), `coverage` (Berichterstattung), `collection` (Sammelband oder Themenheft zum Titel), `method` (Methode), `theory` (Theorie), `context` (Kontext), `source` (Primärquelle wie ein Patent, eine Spielregel oder eine Aussage der Entwickler:innen). Ein Werk mit Tags für ein Spiel und einen Tag erscheint dort, wo beide sich treffen. Andere Zotero-Tags werden ignoriert; Zusammenfassungen und Notizen bleiben in Zotero. In allen Texten wird Literatur mit Pandoc-Citekeys wie `[@willsAintAmericanDream2021]` zitiert.
+Jeder Tag braucht ein Ziel: einen Tag, einen Spielordner, eine Befund-ID oder eine Event-ID. Rollen: `analysis` (Analyse), `coverage` (Berichterstattung), `collection` (Sammelband oder Themenheft zum Titel), `method` (Methode), `theory` (Theorie), `context` (Kontext), `source` (Primärquelle wie ein Patent, eine Spielregel oder eine Aussage der Entwickler:innen). Ein Werk mit Tags für ein Spiel und einen Tag erscheint dort, wo beide sich treffen. Andere Zotero-Tags werden ignoriert; Zusammenfassungen und Notizen bleiben in Zotero. In allen Texten wird Literatur mit Pandoc-Citekeys wie `[@willsAintAmericanDream2021]` zitiert.
 
 ## Verknüpfungen
 
@@ -146,27 +172,27 @@ Jede Verknüpfung, die man wiederfinden muss, steht einmal, in der spezielleren 
 
 | Verknüpfung | Wo |
 |---|---|
-| Sequenz gehört zu einem Spiel | Ordner |
-| Event gehört zu einer Sequenz und ihrem Spiel | Ordner |
-| Event betrifft einen Begriff | `tags` im Event |
-| Literatur betrifft ein Spiel, eine Sequenz, einen Begriff oder ein Event, und wie | Zotero-Tag `gear:<ziel>:<rolle>` |
+| Befund gehört zu einem Spiel | Ordner |
+| Event gehört zu einem Befund | nummerierter Abschnitt in dessen Datei |
+| Befund betrifft einen Begriff | `tags` im Befund |
+| Literatur betrifft ein Spiel, einen Befund, ein Event oder einen Begriff, und wie | Zotero-Tag `gear:<ziel>:<rolle>` |
 | Text zitiert Literatur | Citekey `[@key]` |
 
-Spiel- und Tag-Seiten führen ihre Events und Literatur nicht von Hand auf; Skripte und Website bauen diese Listen. Links im Text sind zum Lesen da: normale Markdown-Links, keine Wikilinks. Der Validator prüft, dass jeder Link und jeder Citekey aufgeht.
+Spiel- und Tag-Seiten führen ihre Befunde und Literatur nicht von Hand auf; Skripte und Website bauen diese Listen. Links im Text sind zum Lesen da: normale Markdown-Links, keine Wikilinks. Der Validator prüft, dass jeder Link und jeder Citekey aufgeht.
 
 ## Ablauf
 
 1. **Recherche.** Klären, was es zum Spiel gibt und wo die Stelle liegt (siehe unten).
 2. **Spiel anlegen.** Wenn es neu ist: `games/<spiel>/game.md` mit Referenzquelle und Abgrenzung.
-3. **Sequenz anlegen.** `templates/sequence.md` in einen Ordner kopieren, der nach Quest oder Mission benannt ist, und die Beschreibung aus der Referenzquelle füllen.
-4. **Events schreiben.** `templates/event.md` in den Sequenzordner kopieren. Beschreibung, Beobachtung, Interpretation, getrennt. `layer`, `agency` und `tags` setzen.
+3. **Befund anlegen.** `templates/evidence.md` in den Ordner des Spiels kopieren, benannt nach Quest oder Mission. Abschnitt 0 aus der Referenzquelle füllen oder löschen, wenn es keine Sequenz gibt.
+4. **Events schreiben.** Je Moment ein nummerierter Abschnitt: Beschreibung, Beobachtung, Interpretation, getrennt. Jedes Event unter `events` mit `layer` und `agency` kodieren; `tags` für den Befund setzen.
 5. **Tags ergänzen.** Ein neues Thema bekommt eine Datei in `tags/`, ein neuer Aspekt einen Abschnitt im Tag.
 6. **Literatur ergänzen** in Zotero, mit `gear:`-Tags.
 7. **Prüfen und committen.** `python scripts/validate.py`, dann Status setzen.
 
 ### Recherchequellen
 
-Sie helfen, Spiele, Stellen und Zusammenhänge zu finden. Was dort steht, wird geprüft, bevor es in ein Event kommt.
+Sie helfen, Spiele, Stellen und Zusammenhänge zu finden. Was dort steht, wird geprüft, bevor es in GEAR kommt.
 
 | Quelle | Nutzen |
 |---|---|
@@ -174,14 +200,14 @@ Sie helfen, Spiele, Stellen und Zusammenhänge zu finden. Was dort steht, wird g
 | [MobyGames](https://www.mobygames.com) | Veröffentlichungen, Plattformen, Versionen, Credits |
 | [IGDB](https://www.igdb.com) | Spieldaten mit stabilen IDs, auch per Skript nutzbar |
 | [VNDB](https://vndb.org) | Visual Novels: Veröffentlichungen, Routen, Figuren |
-| [Does the Dog Die?](https://www.doesthedogdie.com) | gesammelte Inhaltshinweise aus der Community; Hinweis, welche Stellen für `content_warnings` zu prüfen sind |
+| [Does the Dog Die?](https://www.doesthedogdie.com) | gesammelte Inhaltshinweise aus der Community; Hinweis, wo ein Thema in einem Spiel vorkommt |
 | [TV Tropes](https://tvtropes.org) | wiederkehrende Motive über Spiele hinweg; ein Fingerzeig, nie als Beleg zitiert |
 
-Ein Walkthrough kann als Beleg dienen; `observed.source` nennt ihn, wo vorhanden mit GWTC-Dokument-ID und URL des Originals. Er ist eine Beobachtung aus zweiter Hand: Wer ihn verfasst hat, hat unter meist unbekannten Bedingungen gespielt, und das Event sagt das. Walkthroughs sind urheberrechtlich geschützt, zitiert werden nur kurze Stellen.
+Ein Walkthrough kann als Beleg dienen; `source` am Event nennt ihn, wo vorhanden mit GWTC-Dokument-ID und URL des Originals. Er ist eine Beobachtung aus zweiter Hand: Wer ihn verfasst hat, hat unter meist unbekannten Bedingungen gespielt, und das Event sagt das. Walkthroughs sind urheberrechtlich geschützt, zitiert werden nur kurze Stellen.
 
 ### Referenzquellen
 
-Angaben über ein Spiel und seine Inhalte (Titel, IDs, Namen, Orte, Questreihen) kommen aus den etablierten Quellen des Spiels. Offizielle Quellen der Entwickler:innen oder Publisher gehen vor; gibt es keine, nimmt man die Datenbank, auf die sich die Community bezieht. Die Referenzquelle steht in `game.md`: [Wowhead](https://www.wowhead.com) für World of Warcraft, das [GTA Wiki](https://gta.fandom.com) für Grand Theft Auto V, [BoardGameGeek](https://boardgamegeek.com) und die Regeln des Verlags für Monopoly.
+Angaben über ein Spiel und seine Inhalte (Titel, IDs, Namen, Orte, Questreihen) kommen aus den etablierten Quellen des Spiels. Offizielle Quellen der Entwickler:innen oder Publisher gehen vor; gibt es keine, nimmt man die Datenbank, auf die sich die Community bezieht. Die Referenzquelle steht in `game.md`: [Wowhead](https://www.wowhead.com) für World of Warcraft, das [GTA Wiki](https://gta.fandom.com) für Grand Theft Auto V.
 
 ## Suchen und anzeigen
 
@@ -195,8 +221,8 @@ datasette build/gear.db -m datasette.yaml
 
 - `validate.py` prüft Felder, IDs, Dateinamen, Tags, Links, Citekeys und die `gear:`-Tags der Literatur.
 - `export.py` schreibt `build/` (wird nicht committet): CSV-Dateien für Tabellenkalkulationen, `gear.json` für die Website und `gear.db`, eine SQLite-Datenbank mit Volltextsuche.
-- `tree.py` gibt GEAR als Baum aus: Spiel, Sequenz, Events, mit der Literatur auf jeder Ebene. `--by tag` dreht ihn um, `--game` und `--tag` grenzen ein, `--md` schreibt die Bäume zusätzlich als Markdown mit Links.
-- [Datasette](https://datasette.io) zeigt `gear.db` im Browser unter `http://localhost:8001`, mit Facetten, Volltextsuche und gespeicherten Abfragen (Events je Tag, Tags je Spiel, Literatur zu Tag, Spiel oder Event, Inhaltshinweise nach Gruppen).
+- `tree.py` gibt GEAR als Baum aus: Spiel, Befund, Events, mit der Literatur auf jeder Ebene. `--by tag` dreht ihn um, `--game` und `--tag` grenzen ein, `--md` schreibt die Bäume zusätzlich als Markdown mit Links.
+- [Datasette](https://datasette.io) zeigt `gear.db` im Browser unter `http://localhost:8001`, mit Facetten, Volltextsuche und gespeicherten Abfragen (Befunde je Tag, Tags je Spiel, Literatur zu Tag, Spiel, Befund oder Event).
 
 Quelle bleiben die Dateien; alles in `build/` lässt sich jederzeit neu bauen. Nach jedem Push auf `main` wird der Export außerdem unter `https://stschoelzel.github.io/GEAR/` veröffentlicht (`gear.json`, die CSV-Dateien und `gear.db`); die Website gear.madsomeness.de liest `gear.json` von dort.
 
@@ -214,7 +240,7 @@ GEAR folgt dem Digital Game Analysis Protocol (DiGAP) von Daneels, Denoo, Vandew
 
 Nicht jeder Punkt passt zu jeder Analyse. DiGAP schreibt keine Theorie und keine Deutungsmethode vor; es verlangt, dass Entscheidungen sichtbar werden.
 
-In GEAR deckt die Spieldatei die Spielauswahl (Item 9), die Forschenden (Items 5 bis 7) und die Art des Spielens ab (Items 15 bis 21), die Spieltiefe kodiert nach Aarseth (2003). Sequenzen sind die Einheiten, in die das Spiel geteilt wurde (Item 20). Jedes Event hält Datum, Version und Plattform fest (Items 12 bis 14). Events sind die erhobenen Daten (Items 25 und 26), Tags das Codebuch (Item 27), und das offene Repo erfüllt Item 31. Fragestellung und Rahmen (Abschnitte 1 und 5) gehören in die Veröffentlichung, die GEAR nutzt, nicht in den Datensatz.
+In GEAR deckt die Spieldatei die Spielauswahl (Item 9), die Forschenden (Items 5 bis 7) und die Art des Spielens ab (Items 15 bis 21), die Spieltiefe kodiert nach Aarseth (2003). Abschnitt 0 eines Befunds ist die Einheit, in die das Spiel geteilt wurde (Item 20). Jeder Befund hält Datum, Version und Plattform fest (Items 12 bis 14), ein Event kann sie überschreiben. Befunde und ihre Events sind die erhobenen Daten (Items 25 und 26), Tags das Codebuch (Item 27), und das offene Repo erfüllt Item 31. Fragestellung und Rahmen (Abschnitte 1 und 5) gehören in die Veröffentlichung, die GEAR nutzt, nicht in den Datensatz.
 
 ## Sprachen
 

@@ -9,26 +9,32 @@ source: GEAR
 databases:
   gear:
     tables:
-      events:
-        description: One row per event. Filter with the facets, search with the box.
+      evidence:
+        description: One row per evidence entry, such as a quest or mission, with its sequence (section 0).
         sort: id
         facets:
           - game
-          - sequence_title
+          - unit
+          - status
+          - array: tags
+      events:
+        description: One row per numbered section of an evidence entry. Filter with the facets, search with the box.
+        sort: id
+        facets:
+          - game
+          - evidence_title
           - layer
           - agency
           - act
           - if_done
           - if_not_done
           - status
+          - branch
           - version
           - language
           - array: tags
-          - array: content_warnings
       games:
         facets: [engagement]
-      sequences:
-        facets: [game, unit, status]
       tags:
         description: Terms with definition and aspects.
       literature_links:
@@ -40,13 +46,13 @@ databases:
     queries:
       search:
         title: Search everything
-        description: Full-text search across events, tags, translations and literature.
+        description: Full-text search across evidence, events, tags, translations and literature.
         sql: |-
           select 'event' as type, e.id as id, e.title, e.game, snippet(events_fts, -1, '[', ']', ' … ', 12) as hit, e.path
             from events_fts join events e on e.rowid = events_fts.rowid where events_fts match :q
           union all
-          select 'sequence', q.id, q.title, q.game, snippet(sequences_fts, -1, '[', ']', ' … ', 12), q.path
-            from sequences_fts join sequences q on q.rowid = sequences_fts.rowid where sequences_fts match :q
+          select 'evidence', q.id, q.title, q.game, snippet(evidence_fts, -1, '[', ']', ' … ', 12), q.path
+            from evidence_fts join evidence q on q.rowid = evidence_fts.rowid where evidence_fts match :q
           union all
           select 'tag', t.tag, t.title, '', snippet(tags_fts, -1, '[', ']', ' … ', 12), t.path
             from tags_fts join tags t on t.rowid = tags_fts.rowid where tags_fts match :q
@@ -56,44 +62,35 @@ databases:
           union all
           select 'literature', l.citekey, l.title, '', l.author, ''
             from literature_fts join literature l on l.rowid = literature_fts.rowid where literature_fts match :q
-      events_by_tag:
-        title: Events by tag
-        description: All events with a tag, across games, with literature on the tag.
+      evidence_by_tag:
+        title: Evidence by tag
+        description: All evidence entries with a tag, across games.
         sql: |-
-          select e.id, e.game_title as game, e.title, e.layer, e.agency, e.status, e.path
-            from event_tags et join events e on e.id = et.event
-           where et.tag = :tag
-           order by e.game, e.id
+          select x.id, x.game_title as game, x.title, x.unit, x.events, x.status, x.path
+            from evidence_tags xt join evidence x on x.id = xt.evidence
+           where xt.tag = :tag
+           order by x.game, x.id
       tag_by_game:
         title: Tags by game
-        description: How many events carry which tag in which game.
+        description: How many evidence entries and events carry which tag in which game.
         sql: |-
-          select et.tag, e.game_title as game, count(*) as events
-            from event_tags et join events e on e.id = et.event
-           group by et.tag, e.game
-           order by et.tag, events desc
+          select xt.tag, x.game_title as game, count(*) as evidence, sum(x.events) as events
+            from evidence_tags xt join evidence x on x.id = xt.evidence
+           group by xt.tag, x.game
+           order by xt.tag, evidence desc
       game_overview:
         title: Game overview
         description: Events of one game, in order, with the conditions of observation.
         sql: |-
-          select e.sequence_title as sequence, e.id, e.title, e.observed_date, e.version, e.layer, e.agency, e.tags, e.path
+          select e.evidence_title as evidence, e.id, e.title, e.observed_date, e.version, e.layer, e.agency, e.path
             from events e
            where e.game = :game
-           order by e.sequence, e.id
+           order by e.evidence, e.n
       literature_for:
-        title: Literature for a tag, game or event
-        description: "Enter a tag name, a game folder name, a sequence ID or an event ID."
+        title: Literature for a tag, game, evidence entry or event
+        description: "Enter a tag name, a game folder name, an evidence ID (EVD-WOW-0001) or an event ID (EVD-WOW-0001.2)."
         sql: |-
           select ll.role, l.citekey, l.author, l.year, l.title, l.doi, l.url
             from literature_links ll join literature l on l.citekey = ll.citekey
            where ll.target = :target
            order by l.year
-      content_warnings_overview:
-        title: Content warnings by group
-        description: Events per content warning, grouped as in vocabularies.yaml.
-        sql: |-
-          select lab."group" as cw_group, ecw.content_warning, lab.de as label_de, count(*) as events
-            from event_content_warnings ecw
-            left join labels lab on lab.field = 'content_warnings' and lab.value = ecw.content_warning
-           group by ecw.content_warning
-           order by cw_group, events desc
