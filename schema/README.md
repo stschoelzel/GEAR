@@ -31,8 +31,8 @@ All originals need `type`, `schema_version` (a string, `"0.8"`), `status` and `t
 
 | Type | Required | Optional |
 |---|---|---|
-| game | `id` | `wikidata` (Q-ID), `engagement`, `branches` (key: short description) |
-| evidence | `id`, `observed` with `date`, `version`, `platform`, `language`, `by`; `events` | `unit` (required with section 0), `tags`, `first_appeared` with `version`, optionally `branch` (only if the game has `branches`) and `note`, `variant_of` (evidence ID); in `observed`: `branch` (required if the game has `branches`), in `observed`: `server`, `season`, `difficulty`, `mode` |
+| game | `id` | `wikidata` (Q-ID), `engagement`, `branches` (key: short description), `machine_generated` (see README) |
+| evidence | `id`, `observed` with `date`, `version`, `platform`, `language`, `by`; `events` | `unit` (required with section 0), `tags`, `first_appeared` with `version`, optionally `branch` (only if the game has `branches`) and `note`, `variant_of` (evidence ID), `machine_generated` (see README); in `observed`: `branch` (required if the game has `branches`), `server`, `season`, `difficulty`, `mode` |
 | tag | | `related`, `mappings` |
 
 `events` maps each event's number to its fields:
@@ -86,7 +86,7 @@ All in `vocabularies.yaml`, with labels per language.
 
 ## Literature
 
-`literature/game_evidence_archive_and_repository.bib` is exported by Better BibTeX from Zotero. Relations are Zotero tags in `keywords`: `gear:<target>:<role>`. Every tag needs a target. The target is a tag name, a game folder name, an evidence ID (`EVD-WOW-0001`) or an event ID (`EVD-WOW-0001.2`) and must be unambiguous.
+`literature/game_evidence_archive_and_repository.bib` is exported by Better BibTeX from Zotero. Relations are Zotero tags in `keywords`: `gear:<target>:<role>`. Every Zotero tag needs a target. The target is a tag name, a game folder name, an evidence ID (`EVD-WOW-0001`) or an event ID (`EVD-WOW-0001.2`) and must be unambiguous.
 
 ## Mappings to external vocabularies
 

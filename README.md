@@ -93,7 +93,7 @@ events:
 
 ### Versions and branches
 
-Some games exist in several branches that run side by side, such as retail and the Classic branches of World of Warcraft. Such a game lists its branches under `branches` in `game.md` and explains them in a section Versions. `observed.branch` then says in which branch something was observed; an event can override that.
+Some games exist in several branches that run side by side, such as retail and the Classic branches of World of Warcraft. Such a game lists its branches under `branches` in `game.md` and explains them in a section called Versions. `observed.branch` then says in which branch something was observed; an event can override that.
 
 `first_appeared` records where a sequence appeared first: branch (if the game has branches), version or patch and a note such as the expansion and year. What matters is that it was there, not whether it is still there. A sequence that also exists in later branches stays one entry as long as its content is the same. Where the content differs, the branch gets an entry of its own, linked with `variant_of: <evidence ID>`. Games without branches need none of this; there `version` is enough.
 
@@ -156,12 +156,11 @@ consequence:
 
 Consequences: `none`, `progress`, `reward`, `penalty`, `branch` (changes later content), `blocks` (cannot go on), `fail`, `unknown`. What exactly happens is described in the Observation.
 
-
 ## Tags
 
 Tags are used sparingly. A tag names a broad topic, such as `torture`; finer distinctions are sections under Aspects in the tag's file, such as outsourced torture, white torture or torture past the information. An evidence entry carries the tag; an event links to the aspect in its interpretation (`tags/torture.md#white-torture`).
 
-A tag file is both an index entry and a note in the sense of a Zettelkasten: definition, aspects, discussion. It is GEAR's codebook (DiGAP item 27). `related` connects closely related tags; `mappings` points to concepts in other vocabularies (VGMS, Game Ontology Project, Gameplay Design Patterns, Wikidata), without copying them.
+A tag file is both an index entry and a note in the sense of a Zettelkasten: definition, aspects, discussion. It is GEAR's codebook (DiGAP item 27). `related` connects closely related tags; `mappings` points to concepts in other vocabularies (VGMS, Game Ontology Project, Gameplay Design Patterns, Does the Dog Die?, Wikidata), without copying them.
 
 ## Literature
 
@@ -178,7 +177,7 @@ A work is connected to GEAR with Zotero tags of the form `gear:<target>:<role>`:
 | `gear:EVD-WOW-0001:analysis` | analyses this evidence entry, the quest as a whole |
 | `gear:EVD-GTA5-0001.4:analysis` | analyses this one event |
 
-Every tag needs a target: a tag, a game folder, an evidence ID or an event ID. Roles: `analysis`, `coverage`, `collection` (an edited volume or special issue on the title), `method`, `theory`, `context`, `source` (a primary source such as a patent, a rulebook or a statement by the developer). A work with tags for both a game and a tag shows up where the two meet. Other Zotero tags are ignored; summaries and notes stay in Zotero. In any text, literature is cited with Pandoc citekeys such as `[@willsAintAmericanDream2021]`.
+Every Zotero tag needs a target: a tag, a game folder, an evidence ID or an event ID. Roles: `analysis`, `coverage`, `collection` (an edited volume or special issue on the title), `method`, `theory`, `context`, `source` (a primary source such as a patent, a rulebook or a statement by the developers). A work with Zotero tags for both a game and a GEAR tag shows up where the two meet. Other Zotero tags are ignored; summaries and notes stay in Zotero. In any text, literature is cited with Pandoc citekeys such as `[@willsAintAmericanDream2021]`.
 
 ## Relations
 
@@ -203,6 +202,12 @@ Game and tag pages do not list their evidence or literature by hand; scripts and
 5. **Extend tags.** A new topic gets a file in `tags/`; a new aspect a section in the tag.
 6. **Add literature** in Zotero, with `gear:` tags.
 7. **Check and commit.** `python scripts/validate.py`, then set the status.
+
+### Machine-generated entries
+
+Some entries are drafted by a script or a language model from a file that collects raw material: links, copied passages, version numbers, fan wiki excerpts and other sources. This saves time on building the structure. It is a working method and not part of what GEAR documents; the dataset is about evidence, not about how a draft came about.
+
+An entry drafted this way carries `machine_generated: true` in its frontmatter. The flag means that the structure was generated and the content has not yet been checked by a person. Once a person has checked the entry against its sources, the flag is removed. The main case is entries in `games/`. The validator does not check the flag yet.
 
 ### Research sources
 
@@ -285,7 +290,7 @@ Everything committed here is public. `status` says how reliable an entry is: `dr
 
 Data and texts are licensed under [CC BY 4.0](LICENSE), the code in `scripts/` under [MIT](LICENSE-code).
 
-Third-party content is not covered by CC BY: game texts, dialogue quotes, walkthroughs, screenshots and recordings. The rights remain with their holders. GEAR contains only short quotes under quotation right; media appear only as entries in the manifest.
+Third-party content is not covered by CC BY: game texts, dialogue quotes, walkthroughs, screenshots and recordings. The rights remain with their holders. GEAR contains only short quotations as permitted by the right of quotation; media appear only as entries in the manifest.
 
 ## Citation
 

@@ -31,4 +31,10 @@ The torture continues after the victim has given the information it was meant to
 
 Open: Is this a critique of torture as a means of getting information, or does it turn the torture into an end in itself for the player?
 
+### Torture as research
+
+The suffering of the victims is not a means of getting information but part of a scientific or technical process: the victims are the material. In Outlast the Murkoff Corporation traumatises patients because, in Wernicke's theory, traumatized patients are the subjects the Morphogenic Engine needs; the documents record this in clinical language (case numbers, measured values, treatment stages, restraint). The game ties the fiction to Operation Paperclip and MKUltra.
+
+Open: Is "torture" the right tag here, or does this need a tag of its own for human experimentation?
+
 ## Discussion

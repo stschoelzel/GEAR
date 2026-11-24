@@ -4,7 +4,7 @@ Game Evidence Archive & Repository
 
 [English](README.md)
 
-GEAR ist ein offener Datensatz für Gameplay-Belege. Jede Behauptung über ein Spiel ("in Quest X muss man Y tun") soll sich auf einen Beleg zurückführen lassen: wer hat wann, unter welchen Bedingungen, was gespielt oder gelesen und beobachtet. Beobachtung und Interpretation stehen dabei getrennt.
+GEAR ist ein offener Datensatz für Gameplay-Belege. Jede Behauptung über ein Spiel ("in Quest X muss man Y tun") soll sich auf einen Beleg zurückführen lassen: wer wann unter welchen Bedingungen was gespielt oder gelesen und dabei beobachtet hat. Beobachtung und Interpretation stehen dabei getrennt.
 
 Der Datensatz besteht aus Markdown-Dateien mit YAML-Frontmatter und lässt sich mit jedem Texteditor bearbeiten; Zettlr eignet sich zum Schreiben, VSCodium für Struktur und Git. Skripte machen daraus Tabellen, eine durchsuchbare Datenbank und Bäume, siehe [Suchen und anzeigen](#suchen-und-anzeigen). Die öffentliche Website entsteht daraus in einem eigenen Repository (madGear).
 
@@ -18,7 +18,7 @@ GEAR beruht auf fünf Grundsätzen. DiGAP ist der Rahmen, auf dem sie aufbauen, 
 
 1. **Roh und bearbeitet getrennt** (OAIS). Eine Quelle bleibt so, wie sie gefunden wurde. Eine Beobachtung ist ein bearbeiteter Datensatz dazu und wird als solcher geschrieben. Eine aus einem Walkthrough zitierte Stelle ist Rohmaterial und trägt ihre Fundstelle.
 2. **Jede Beschreibung hat eine Herkunft** (OLAC). Jedes Event nennt seine `source`: die Referenz oder den Walkthrough, mit URL und Abrufdatum, wo es eine gibt, oder `own play` für gespieltes Material.
-3. **Fundstellen sind präzise** (Media Fragments). Eine Fundstelle zeigt auf die genaue Stelle: ein Timecode für gespieltes Video, ein Media-Fragments-Fragment `#t=` für Web-Video, der benannte Abschnitt oder die benannte Passage bei Text.
+3. **Fundstellen sind präzise** (Media Fragments). Eine Fundstelle zeigt auf die genaue Stelle: ein Timecode für gespieltes Video, ein Fragment `#t=` nach Media Fragments für Web-Video, der benannte Abschnitt oder die benannte Passage bei Text.
 4. **Beschreibungen sind wertneutral und eindeutig** (ASD-STE100, mit den Satzmustern von EARS und Gherkin). Ein Begriff hat eine Bedeutung. Beobachtungen folgen dem [Leitfaden für Beobachtungen](schema/observation_style.de.md). Wertung und Deutung stehen nur in der Interpretation.
 5. **Regeln, Dynamik und Wirkung getrennt** (MDA). Regeln und Dynamik werden beobachtet; Wirkungen werden interpretiert. Siehe [Was wohin gehört](#was-wohin-gehört).
 
@@ -115,7 +115,7 @@ Deutungen und Notizen gehören in den Befund oder in den Tag. Die Deutung eines 
 
 **Metadaten** beschreiben den Beleg, nicht das Spiel. Wohin eine Datei gehört, ergibt sich aus dem Ordner und steht nicht noch einmal da.
 
-**Quelle und Fundstelle** stammen aus dem Rohmaterial und bleiben getrennt vom bearbeiteten Text (OAIS). `source` ist für jedes Event Pflicht: bei gelesenem Material die Referenz, mit URL und Abrufdatum, wo es eine gibt; bei gespieltem Material `own play`. Eine `locator` nennt die genaue Stelle: einen Timecode (`HH:MM:SS`) für gespieltes Video, ein Media-Fragments-Fragment `#t=` für Web-Video, bei Text den Abschnitt oder die Passage.
+**Quelle und Fundstelle** stammen aus dem Rohmaterial und bleiben getrennt vom bearbeiteten Text (OAIS). `source` ist für jedes Event Pflicht: bei gelesenem Material die Referenz, mit URL und Abrufdatum, wo es eine gibt; bei gespieltem Material `own play`. Die Fundstelle (`locator`) nennt die genaue Stelle: einen Timecode (`HH:MM:SS`) für gespieltes Video, ein Fragment `#t=` nach Media Fragments für Web-Video, bei Text den Abschnitt oder die Passage.
 
 **Kodierung** nutzt nur kontrollierte Werte. `tags` muss eine Datei in `tags/` nennen; alle anderen Werte stehen in `vocabularies.yaml`. Freie Tags gibt es nicht, weil sie auseinanderlaufen (`torture`, `folter`, `torture_scene`).
 
@@ -158,16 +158,15 @@ consequence:
 
 Folgen: `none` (keine), `progress` (Fortschritt), `reward` (Belohnung), `penalty` (Nachteil), `branch` (verändert spätere Inhalte), `blocks` (kein Weiterkommen), `fail` (Scheitern), `unknown` (noch unbekannt). Was genau geschieht, steht in der Beobachtung.
 
-
 ## Tags
 
 Tags werden sparsam vergeben. Ein Tag benennt ein breites Thema, etwa `torture`; feinere Unterscheidungen sind Abschnitte unter Aspects in der Datei des Tags, etwa ausgelagerte Folter, weiße Folter oder Folter über die Information hinaus. Ein Befund trägt den Tag; ein Event verlinkt in seiner Interpretation auf den Aspekt (`tags/torture.md#white-torture`).
 
-Eine Tag-Datei ist Registereintrag und Zettel zugleich: Definition, Aspekte, Diskussion. Sie ist das Codebuch von GEAR (DiGAP Item 27). `related` verbindet eng verwandte Tags; `mappings` verweist auf Begriffe anderer Vokabulare (VGMS, Game Ontology Project, Gameplay Design Patterns, Wikidata), ohne sie zu kopieren.
+Eine Tag-Datei ist Registereintrag und Zettel zugleich: Definition, Aspekte, Diskussion. Sie ist das Codebuch von GEAR (DiGAP Item 27). `related` verbindet eng verwandte Tags; `mappings` verweist auf Begriffe anderer Vokabulare (VGMS, Game Ontology Project, Gameplay Design Patterns, Does the Dog Die?, Wikidata), ohne sie zu kopieren.
 
 ## Literatur
 
-GEAR sammelt Fachliteratur mit konkretem Bezug zu einem Spiel, einem Befund, einem Event oder einem Tag in GEAR. Allgemeine Texte der Game Studies ohne solchen Bezug werden nicht gesammelt; Texte, auf die sich diese Dokumentation stützt, stehen unter [References](README.md#references).
+GEAR sammelt Fachliteratur mit konkretem Bezug zu einem Spiel, einem Befund, einem Event oder einem Tag in GEAR. Allgemeine Texte der Game Studies ohne solchen Bezug werden nicht gesammelt; Texte, auf die sich diese Dokumentation stützt, stehen in der englischen Fassung unter [References](README.md#references).
 
 Die Literatur wird in Zotero gepflegt, in einer eigenen Sammlung. Better BibTeX exportiert diese Sammlung automatisch nach `literature/game_evidence_archive_and_repository.bib`; GEAR liest diese Datei nur. In den Export-Einstellungen von Better BibTeX die Felder `file` (lokale Pfade) und `abstract` (Verlagstexte, nicht unter CC BY) weglassen.
 
@@ -180,7 +179,7 @@ Ein Werk wird über Zotero-Tags der Form `gear:<ziel>:<rolle>` mit GEAR verbunde
 | `gear:EVD-WOW-0001:analysis` | analysiert diesen Befund, die Quest als Ganzes |
 | `gear:EVD-GTA5-0001.4:analysis` | analysiert dieses eine Event |
 
-Jeder Tag braucht ein Ziel: einen Tag, einen Spielordner, eine Befund-ID oder eine Event-ID. Rollen: `analysis` (Analyse), `coverage` (Berichterstattung), `collection` (Sammelband oder Themenheft zum Titel), `method` (Methode), `theory` (Theorie), `context` (Kontext), `source` (Primärquelle wie ein Patent, eine Spielregel oder eine Aussage der Entwickler:innen). Ein Werk mit Tags für ein Spiel und einen Tag erscheint dort, wo beide sich treffen. Andere Zotero-Tags werden ignoriert; Zusammenfassungen und Notizen bleiben in Zotero. In allen Texten wird Literatur mit Pandoc-Citekeys wie `[@willsAintAmericanDream2021]` zitiert.
+Jeder Zotero-Tag braucht ein Ziel: einen Tag, einen Spielordner, eine Befund-ID oder eine Event-ID. Rollen: `analysis` (Analyse), `coverage` (Berichterstattung), `collection` (Sammelband oder Themenheft zum Titel), `method` (Methode), `theory` (Theorie), `context` (Kontext), `source` (Primärquelle wie ein Patent, eine Spielregel oder eine Aussage der Entwickler:innen). Ein Werk mit Zotero-Tags für ein Spiel und einen GEAR-Tag erscheint dort, wo beide sich treffen. Andere Zotero-Tags werden ignoriert; Zusammenfassungen und Notizen bleiben in Zotero. In allen Texten wird Literatur mit Pandoc-Citekeys wie `[@willsAintAmericanDream2021]` zitiert.
 
 ## Verknüpfungen
 
@@ -201,10 +200,16 @@ Spiel- und Tag-Seiten führen ihre Befunde und Literatur nicht von Hand auf; Skr
 1. **Recherche.** Klären, was es zum Spiel gibt und wo die Stelle liegt (siehe unten).
 2. **Spiel anlegen.** Wenn es neu ist: `games/<spiel>/game.md` mit Referenzquelle und Abgrenzung.
 3. **Befund anlegen.** `templates/evidence.md` in den Ordner des Spiels kopieren, benannt nach Quest oder Mission. Abschnitt 0 aus der Referenzquelle füllen oder löschen, wenn es keine Sequenz gibt.
-4. **Events schreiben.** Je Moment ein nummerierter Abschnitt: Beschreibung, Beobachtung, Interpretation, getrennt. Jedes Event unter `events` mit `layer` und `agency` kodieren, dazu eine `source` und eine genaue `locator` angeben; `tags` für den Befund setzen.
+4. **Events schreiben.** Je Moment ein nummerierter Abschnitt: Beschreibung, Beobachtung, Interpretation, getrennt. Jedes Event unter `events` mit `layer` und `agency` kodieren, dazu eine `source` und eine genaue Fundstelle (`locator`) angeben; `tags` für den Befund setzen.
 5. **Tags ergänzen.** Ein neues Thema bekommt eine Datei in `tags/`, ein neuer Aspekt einen Abschnitt im Tag.
 6. **Literatur ergänzen** in Zotero, mit `gear:`-Tags.
 7. **Prüfen und committen.** `python scripts/validate.py`, dann Status setzen.
+
+### Maschinell erzeugte Einträge
+
+Manche Einträge entstehen als Entwurf aus einer Datei, in die Rohmaterial gesammelt wird: Links, kopierte Passagen, Versionsnummern, Auszüge aus Fanwikis und andere Belege. Ein Skript oder ein Sprachmodell legt daraus die Struktur an. Das spart Zeit beim Aufbau. Es ist eine Arbeitsmethode und kein Teil dessen, was GEAR dokumentiert; der Datensatz handelt von Belegen, nicht davon, wie ein Entwurf entstanden ist.
+
+Ein so entstandener Eintrag trägt im Frontmatter `machine_generated: true`. Die Markierung bedeutet: Die Struktur ist erzeugt, der Inhalt ist noch nicht von einer Person geprüft. Sobald eine Person den Eintrag am Beleg geprüft hat, wird die Markierung entfernt. Hauptfall sind Einträge in `games/`. Der Validator prüft die Markierung noch nicht.
 
 ### Recherchequellen
 
@@ -256,7 +261,7 @@ GEAR folgt dem Digital Game Analysis Protocol (DiGAP) von Daneels, Denoo, Vandew
 
 Nicht jeder Punkt passt zu jeder Analyse. DiGAP schreibt keine Theorie und keine Deutungsmethode vor; es verlangt, dass Entscheidungen sichtbar werden.
 
-In GEAR deckt die Spieldatei die Spielauswahl (Item 9), die Forschenden (Items 5 bis 7) und die Art des Spielens ab (Items 15 bis 21), die Spieltiefe kodiert nach Aarseth (2003). Abschnitt 0 eines Befunds ist die Einheit, in die das Spiel geteilt wurde (Item 20). Jeder Befund hält Datum, Version und Plattform fest (Items 12 bis 14), ein Event kann sie überschreiben. Befunde und ihre Events sind die erhobenen Daten (Items 25 und 26), Tags das Codebuch (Item 27), und das offene Repo erfüllt Item 31. Fragestellung und Rahmen (Abschnitte 1 und 5) gehören in die Veröffentlichung, die GEAR nutzt, nicht in den Datensatz.
+In GEAR deckt die Spieldatei die Spielauswahl (Item 9), die Forschenden (Items 5 bis 7) und die Art des Spielens ab (Items 15 bis 21); die Spieltiefe ist nach Aarseth (2003) kodiert. Abschnitt 0 eines Befunds ist die Einheit, in die das Spiel geteilt wurde (Item 20). Jeder Befund hält Datum, Version und Plattform fest (Items 12 bis 14), ein Event kann sie überschreiben. Befunde und ihre Events sind die erhobenen Daten (Items 25 und 26), Tags das Codebuch (Item 27), und das offene Repo erfüllt Item 31. Fragestellung und Rahmen (Abschnitte 1 und 5) gehören in die Veröffentlichung, die GEAR nutzt, nicht in den Datensatz.
 
 ## Sprachen
 
@@ -293,6 +298,6 @@ Nicht unter CC BY stehen Inhalte Dritter: Spieltexte, Dialogzitate, Walkthroughs
 
 Siehe [CITATION.cff](CITATION.cff). Zitiert wird immer ein Stand des Datensatzes, mit Commit-Hash oder Release.
 
-## Literatur
+## Referenzen
 
 Siehe [README.md](README.md#references) und [literature/game_evidence_archive_and_repository.bib](literature/game_evidence_archive_and_repository.bib).

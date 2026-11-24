@@ -29,8 +29,8 @@ Alle Originale brauchen `type`, `schema_version` (als String, `"0.8"`), `status`
 
 | Typ | Pflicht | optional |
 |---|---|---|
-| game | `id` | `wikidata` (Q-ID), `engagement`, `branches` (Schlüssel: kurze Beschreibung) |
-| evidence | `id`, `observed` mit `date`, `version`, `platform`, `language`, `by`; `events` | `unit` (Pflicht mit Abschnitt 0), `tags`, `first_appeared` mit `version`, optional `branch` (nur wenn das Spiel `branches` hat) und `note`, `variant_of` (Befund-ID); in `observed`: `branch` (Pflicht, wenn das Spiel `branches` hat), in `observed`: `server`, `season`, `difficulty`, `mode` |
+| game | `id` | `wikidata` (Q-ID), `engagement`, `branches` (Schlüssel: kurze Beschreibung), `machine_generated` (siehe README) |
+| evidence | `id`, `observed` mit `date`, `version`, `platform`, `language`, `by`; `events` | `unit` (Pflicht mit Abschnitt 0), `tags`, `first_appeared` mit `version`, optional `branch` (nur wenn das Spiel `branches` hat) und `note`, `variant_of` (Befund-ID), `machine_generated` (siehe README); in `observed`: `branch` (Pflicht, wenn das Spiel `branches` hat), `server`, `season`, `difficulty`, `mode` |
 | tag | | `related`, `mappings` |
 
 `events` ordnet jeder Event-Nummer ihre Felder zu: `layer` (Pflicht), `timecode` oder `locator` (eins davon Pflicht; `timecode` als `HH:MM:SS` bei Gespieltem, `locator` nennt bei Gelesenem die genaue Stelle), `source` (Pflicht; gelesen: Referenz als Markdown-Link mit Abrufdatum, `[Titel](URL), accessed JJJJ-MM-TT`, mehrere durch `;` getrennt, ohne URL nur die Referenz; gespielt: `own play`), `agency`, `act`, `consequence`, `observed` (überschreibt einzelne Angaben des Befunds), `media`, `coded_by`.
